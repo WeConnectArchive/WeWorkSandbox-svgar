@@ -3,7 +3,6 @@ import { Drawing } from "./models/schema/drawing/Drawing";
 import { Layer } from "./models/schema/layer/Layer";
 import { State } from "./models/schema/state/State";
 import { StyleBuilder } from "./models/styles/builders/StyleBuilder";
-import Donut from "./idioms/graphs/Donut";
 
 // Default model and idiom exports
 export default {
@@ -11,8 +10,7 @@ export default {
     Drawing,
     Layer,
     State,
-    StyleBuilder,
-    Donut
+    StyleBuilder
 }
 
 // Individual schema model exports
