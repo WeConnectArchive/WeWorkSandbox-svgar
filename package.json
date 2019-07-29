@@ -1,0 +1,48 @@
+{
+  "name": "svgar",
+  "version": "0.1.3",
+  "description": "svg, but a little sweeter",
+  "main": "dist/index.js",
+  "module": "commonjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "tsc",
+    "test": "mocha -r ts-node/register src/**/*.spec.ts"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "reporter": [
+      "html"
+    ],
+    "all": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WeConnect/svgar.git"
+  },
+  "keywords": [
+    "svg"
+  ],
+  "author": "Chuck",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/WeConnect/svgar/issues"
+  },
+  "homepage": "https://github.com/WeConnect/svgar#readme",
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.1",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3"
+  }
+}
