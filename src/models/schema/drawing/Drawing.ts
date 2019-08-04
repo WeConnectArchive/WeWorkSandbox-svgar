@@ -3,7 +3,7 @@ import { Layer } from "../layer/Layer";
 import { State } from "../state/State";
 import { GeometryElement } from "../../geometry/GeometryElement";
 
-class SvgarDrawing {
+export class SvgarDrawing {
 
     // Top level <svg /> attributes
     public xmlns:string = "http://www.w3.org/2000/svg";
