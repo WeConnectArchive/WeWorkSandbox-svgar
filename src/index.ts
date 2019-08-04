@@ -1,18 +1,17 @@
 import { Project } from "./models/schema/Project";
-import { Drawing } from "./models/schema/drawing/Drawing";
+import { Drawing, SvgarDrawing } from "./models/schema/drawing/Drawing";
 import { Layer } from "./models/schema/layer/Layer";
 import { State } from "./models/schema/state/State";
 import { StyleBuilder } from "./models/styles/builders/StyleBuilder";
-import Donut from "./idioms/graphs/Donut";
 
 // Default model and idiom exports
 export default {
     Project,
     Drawing,
+    SvgarDrawing,
     Layer,
     State,
-    StyleBuilder,
-    Donut
+    StyleBuilder
 }
 
 // Individual schema model exports
