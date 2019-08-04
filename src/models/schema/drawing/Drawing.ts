@@ -168,7 +168,7 @@ class SvgarPath {
     constructor(geometry: GeometryElement, state: State, width: number, height: number) {
         
         // Compile path information
-        this.d = geometry.CompileToSvgPath(width, height);
+        this.d = geometry.CompileToSvgPath(width, height).replace("d=", "").replace('"', "");
 
         // Add inline style
         this.styleInline = state.CompileStyle(geometry.Tags);
