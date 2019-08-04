@@ -143,7 +143,7 @@ class SvgarLayer {
         }
 
         // Add inline style
-        this.styleInline = state.CompileStyle(layer.Tags);
+        this.styleInline = state.CompileStyle(layer.Tags).replace("style=", "").replace('"', "");
 
         // Set individual style attributes
         // TODO
@@ -164,6 +164,7 @@ class SvgarPath {
     public d:string = "";
     public styleInline:string = "";
     public styleAttributes:{[key:string]:string} = {};
+    public tags:string[] = [];
 
     constructor(geometry: GeometryElement, state: State, width: number, height: number) {
         
@@ -171,7 +172,10 @@ class SvgarPath {
         this.d = geometry.CompileToSvgPath(width, height).replace("d=", "").replace('"', "");
 
         // Add inline style
-        this.styleInline = state.CompileStyle(geometry.Tags);
+        this.styleInline = state.CompileStyle(geometry.Tags).replace("style=", "").replace('"', "");;
+
+        // Store tags
+        this.tags = geometry.Tags;
     }
 }
 
