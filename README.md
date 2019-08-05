@@ -20,4 +20,4 @@ Svgar offers:
 
 ## Examples
 
-Visit [svgar.dev](https//svgar.dev).
+Visit [svgar.dev](https://svgar.dev).
