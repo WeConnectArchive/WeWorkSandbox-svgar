@@ -8,7 +8,8 @@
   "scripts": {
     "prepare": "npm run build",
     "build": "tsc",
-    "test": "mocha -r ts-node/register src/**/*.spec.ts"
+    "test": "mocha -r ts-node/register src/**/*.spec.ts",
+    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
   },
   "nyc": {
     "extension": [
@@ -16,7 +17,9 @@
       ".tsx"
     ],
     "exclude": [
-      "**/*.d.ts"
+      "**/*.d.ts",
+      "dist/**",
+      "coverage/**"
     ],
     "reporter": [
       "html"
@@ -40,7 +43,9 @@
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
+    "coveralls": "^3.0.5",
     "mocha": "^6.1.4",
+    "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^14.1.1",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
