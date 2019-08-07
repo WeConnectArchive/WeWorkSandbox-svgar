@@ -45,11 +45,7 @@ export class SvgarDrawing {
     }
 
     private StageLayers(drawing: Drawing, state: State) : Layer[] {
-        let activeState = drawing.States.filter(x => x.Data["original-name"] == state)[0];
-        
-        if (activeState == undefined) {
-            activeState = drawing.States[0];
-        }
+        let activeState = state;
 
         // Remove layers hidden in state
         let activeLayers:Layer[] = []; 
