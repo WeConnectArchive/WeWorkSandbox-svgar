@@ -50,9 +50,9 @@ declare module 'rhino3dm' {
     }
 
     class Line {
-        from:Point3d;
+        from:number[];
         length: number;
-        to:Point3d;
+        to:number[];
 
         constructor(from:number[], to:number[]);
     }
@@ -64,14 +64,6 @@ declare module 'rhino3dm' {
         static create(periodic: boolean, degree: number, points: Point3dList) : NurbsCurve;
     }
 
-    class Point3d {
-        xyz:number[];
-
-        constructor(x:number, y:number, z:number);
-
-        DistanceTo(point:Point3d) : number;
-    }
-
     class Point3dList {
         xyz:number[]
 
@@ -81,10 +73,10 @@ declare module 'rhino3dm' {
     }
 
     class Sphere {
-        center: Point3d;
+        center: number[];
         diameter: number;
         isValid: boolean;
 
-        constructor(center:Point3d, radius:number)
+        constructor(center:number[], radius:number)
     }
 }
