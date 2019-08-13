@@ -1,29 +1,90 @@
-declare module 'rhino3dm';
+declare module 'rhino3dm' {
 
-// declare var rhino3dm:any;
+    export default function rhino3dm() : Promise<RhinoModule>;
 
-// declare module 'rhino3dm' {
+    class RhinoModule {
+        File3dm: typeof File3dm;
+        Line: typeof Line;
+        NurbsCurve: typeof NurbsCurve;
+        Point3dList: typeof Point3dList;      
+    }
 
-//     export class Line {
-//         from:Point3d;
-//         length: number;
-//         to:Point3d;
+    class File3dm {
+        revision: number;
 
-//         constructor(from:number[], to:number[])
-//     }
-//     export class Point3d {
-//         xyz:number[]
+        constructor();
 
-//         constructor(x:number, y:number, z:number)
+        static fromByteArray(array:Uint8Array) : File3dm;
+        objects() : File3dmObjectTable;
+        layers() : File3dmLayerTable;
+    }
 
-//         DistanceTo(point:Point3d): number;
-//     }
+    class File3dmLayerTable {
 
-//     export class Sphere {
-//         center: Point3d;
-//         diameter: number;
-//         isValid: boolean;
+        constructor();
 
-//         constructor(center:Point3d, radius:number)
-//     }
-// }
+        count() : number;
+        get(index:number) : Layer;
+    }
+
+    class File3dmObject {
+
+        constructor();
+
+        attributes() : any;
+        geometry() : any;
+    }
+
+    class File3dmObjectTable {
+        count:number;
+
+        constructor();
+
+        get(index:number) : File3dmObject;
+    }
+
+    class Layer {
+        name:string;
+
+        constructor();
+    }
+
+    class Line {
+        from:Point3d;
+        length: number;
+        to:Point3d;
+
+        constructor(from:number[], to:number[]);
+    }
+
+    class NurbsCurve {
+
+        constructor(degree: number, pointCount: number);
+
+        static create(periodic: boolean, degree: number, points: Point3dList) : NurbsCurve;
+    }
+
+    class Point3d {
+        xyz:number[];
+
+        constructor(x:number, y:number, z:number);
+
+        DistanceTo(point:Point3d) : number;
+    }
+
+    class Point3dList {
+        xyz:number[]
+
+        constructor(capacity?: number);
+
+        add(x:number, y:number, z:number) : Point3dList;
+    }
+
+    class Sphere {
+        center: Point3d;
+        diameter: number;
+        isValid: boolean;
+
+        constructor(center:Point3d, radius:number)
+    }
+}

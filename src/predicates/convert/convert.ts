@@ -1,6 +1,6 @@
 import { PolylineBuilder } from "../../models/geometry/builders/PolylineBuilder"
 import { GeometryElement } from "../../models/geometry/GeometryElement";
-import * as rhino3dm from 'rhino3dm';
+//import rhino3dm from 'rhino3dm';
 
 export default [
     LineToSvgar
