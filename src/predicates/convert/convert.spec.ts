@@ -44,17 +44,17 @@ describe('given a line to convert', () => {
         let obj = file3dm.objects();
         let layers = file3dm.layers();
 
-        console.log("objects");
-        console.log(obj.get(0));
-        for(var i=0; i<obj.count; i++) {
-            let geometry = obj.get(i).geometry()
-            console.log(geometry)
-        }
+        // console.log("objects");
+        // console.log(obj.get(0));
+        // for(var i=0; i<obj.count; i++) {
+        //     let geometry = obj.get(i).geometry()
+        //     console.log(geometry.objectType)
+        // }
 
-        console.log("layers")
-        for(var i = 0; i < layers.count(); i++) {
-            console.log(layers.get(i).name);
-        }
+        // console.log("layers")
+        // for(var i = 0; i < layers.count(); i++) {
+        //     console.log(layers.get(i).id);
+        // }
     })
 
 });
