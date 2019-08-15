@@ -22,7 +22,7 @@ describe('given a line to convert', () => {
     });
 
     it('should create a nurbscurve', () => {
-        let pts = new rhino.Point3dList();
+        let pts = new rhino.Point3dList(5);
         pts.add(0,0,0);
         pts.add(0.5,0.5,0.5);
         pts.add(0.5,0.5,0.5);
@@ -44,17 +44,23 @@ describe('given a line to convert', () => {
         let obj = file3dm.objects();
         let layers = file3dm.layers();
 
-        // console.log("objects");
-        // console.log(obj.get(0));
-        // for(var i=0; i<obj.count; i++) {
-        //     let geometry = obj.get(i).geometry()
-        //     console.log(geometry.objectType)
-        // }
+        console.log("objects");
+        console.log(obj.get(0));
+        for(var i=0; i<obj.count; i++) {
+            let geometry = obj.get(i).geometry()
+            console.log(geometry);
+        }
 
         // console.log("layers")
         // for(var i = 0; i < layers.count(); i++) {
         //     console.log(layers.get(i).id);
         // }
-    })
+    });
+
+    it('should report on pts', () => {
+        let pt = new rhino.Point();
+
+        console.log(Object.keys(pt));
+    });
 
 });
