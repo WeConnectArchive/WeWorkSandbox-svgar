@@ -45,22 +45,17 @@ describe('given a line to convert', () => {
         let layers = file3dm.layers();
 
         console.log("objects");
-        console.log(obj.get(0));
         for(var i=0; i<obj.count; i++) {
-            let geometry = obj.get(i).geometry()
-            console.log(geometry);
+            let geometry = obj.get(i).geometry();
+
+            if (geometry.objectType == rhino.ObjectType.Curve) {
+                console.log(geometry);
+            }
+
+            //console.log(geometry.constructor.name);
         }
 
-        // console.log("layers")
-        // for(var i = 0; i < layers.count(); i++) {
-        //     console.log(layers.get(i).id);
-        // }
-    });
-
-    it('should report on pts', () => {
-        let pt = new rhino.Point();
-
-        console.log(Object.keys(pt));
+        Convert.Rhino.Model(file3dm).ToSvgar();
     });
 
 });

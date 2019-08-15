@@ -216,6 +216,7 @@ declare module 'rhino3dm' {
 		NurbsCurvePointList: typeof NurbsCurvePointList;
 		NurbsSurface: typeof NurbsSurface;
 		ObjectAttributes: typeof ObjectAttributes;
+		ObjectType: typeof ObjectType;
 		Plane: typeof Plane;
 		PlaneSurface: typeof PlaneSurface;
 		Point: typeof Point;
@@ -1588,7 +1589,7 @@ declare module 'rhino3dm' {
 		/** ... */
 		attributes(): void;
 		/** ... */
-		geometry(): any;
+		geometry(): ArcCurve | Extrusion | NurbsCurve | Point | Polycurve | Polylinecurve;
 	}
 
 	class File3dmObjectTable {
@@ -2184,7 +2185,7 @@ declare module 'rhino3dm' {
 		/**
 		 * Gets or sets how and if textures will be packed.
 		 */
-		//textureRange: MeshingParameterTextureRange;
+		textureRange: any;
 		/**
 		 * Gets or sets whether or not the mesh is allowed to have jagged seams.
 		 * When this flag is set to true, meshes on either side of a Brep Edge will not match up.
