@@ -165,6 +165,19 @@ declare module 'rhino3dm' {
 	}
 
 	class RhinoModule {
+		ActiveSpace: typeof ActiveSpace
+		ComponentIndexType: typeof ComponentIndexType
+		CoordinateSystem: typeof CoordinateSystem
+		MeshType: typeof MeshType
+		ObjectColorSource: typeof ObjectColorSource
+		ObjectDecoration: typeof ObjectDecoration
+		ObjectLinetypeSource: typeof ObjectLinetypeSource
+		ObjectMaterialSource: typeof ObjectMaterialSource
+		ObjectMode: typeof ObjectMode
+		ObjectPlotColorSource: typeof ObjectPlotColorSource
+		ObjectPlotWeightSource: typeof ObjectPlotWeightSource
+		ObjectType: typeof ObjectType
+		UnitSystem: typeof UnitSystem
 		Arc: typeof Arc;
 		ArcCurve: typeof ArcCurve;
 		ArchivableDictionary: typeof ArchivableDictionary;
@@ -216,7 +229,6 @@ declare module 'rhino3dm' {
 		NurbsCurvePointList: typeof NurbsCurvePointList;
 		NurbsSurface: typeof NurbsSurface;
 		ObjectAttributes: typeof ObjectAttributes;
-		ObjectType: typeof ObjectType;
 		Plane: typeof Plane;
 		PlaneSurface: typeof PlaneSurface;
 		Point: typeof Point;

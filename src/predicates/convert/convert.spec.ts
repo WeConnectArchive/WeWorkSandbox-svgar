@@ -37,25 +37,25 @@ describe('given a line to convert', () => {
     });
 
     it('should read a rhino file', () => {
-        let buffer = fs.readFileSync("src\\lib\\svgar.3dm");
-        let arr = new Uint8Array(buffer);
-        let file3dm = rhino.File3dm.fromByteArray(arr);
+        // let buffer = fs.readFileSync("src\\lib\\svgar.3dm");
+        // let arr = new Uint8Array(buffer);
+        // let file3dm = rhino.File3dm.fromByteArray(arr);
 
-        let obj = file3dm.objects();
-        let layers = file3dm.layers();
+        // let obj = file3dm.objects();
+        // let layers = file3dm.layers();
 
-        console.log("objects");
-        for(var i=0; i<obj.count; i++) {
-            let geometry = obj.get(i).geometry();
+        // console.log("objects");
+        // for(var i=0; i<obj.count; i++) {
+        //     let geometry = obj.get(i).geometry();
 
-            if (geometry.objectType == rhino.ObjectType.Curve) {
-                console.log(geometry);
-            }
+        //     if (geometry.objectType == rhino.ObjectType.Curve) {
+        //         console.log(geometry);
+        //     }
 
-            //console.log(geometry.constructor.name);
-        }
+        //     //console.log(geometry.constructor.name);
+        // }
 
-        Convert.Rhino.Model(file3dm).ToSvgar();
+        // Convert.Rhino.Model(file3dm).ToSvgar();
     });
 
 });
