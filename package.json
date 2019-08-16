@@ -1,6 +1,6 @@
 {
   "name": "svgar",
-  "version": "0.1.12",
+  "version": "0.2.1",
   "description": "svg, but a little sweeter",
   "main": "dist/index.js",
   "module": "commonjs",

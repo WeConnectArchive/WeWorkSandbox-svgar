@@ -1,6 +1,7 @@
 import Create from "./create";
 import { expect } from 'chai';
 import 'mocha';
+import rhino3dm, { File3dm, RhinoModule } from "rhino3dm";
 
 describe('given multiple separate rhino create predicates', () => {
 
@@ -17,5 +18,24 @@ describe('given multiple separate rhino create predicates', () => {
 
         expect(pts.count).to.equal(1);
     });
+
+    it('should create a Model', () => {
+        let file = Create.Rhino.Model().Emit;
+        expect(file).to.exist;
+    });
+
+});
+
+describe('given a create rhino model context', () => {
+
+    // describe('when adding curves', () => {
+        
+    //     let file = Create.Rhino.Model().WithTheseCurves([]).Emit;
+
+    //     it('should parse arc curves', () => {
+    //         expect(file).to.exist;
+    //     });
+
+    // });
 
 });
