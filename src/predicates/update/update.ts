@@ -1,11 +1,10 @@
 import { Drawing } from "../../models/schema/drawing/Drawing";
-import { CreatePredicate } from "../create/create";
+import Create from "../create/create";
 
 export class UpdatePredicate {
 
     public DrawingNames(drawing: Drawing, name: string) : void {
-        var Create = new CreatePredicate();
-        var newNames = Create.NameData(name);
+        var newNames = Create.Svgar.NameData(name);
 
         var newOriginalName = newNames["original-name"];
         if (newOriginalName != undefined) {

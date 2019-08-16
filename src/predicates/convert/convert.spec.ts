@@ -1,7 +1,7 @@
 import Convert from './convert';
 import * as fs from 'fs';
 import { expect } from 'chai';
-import rhino3dm, { RhinoModule } from 'rhino3dm';
+import rhino3dm, { RhinoModule, File3dm } from 'rhino3dm';
 import 'mocha';
 
 describe('given a line to convert', () => {
@@ -55,7 +55,7 @@ describe('given a line to convert', () => {
         //     //console.log(geometry.constructor.name);
         // }
 
-        // Convert.Rhino.Model(file3dm).ToSvgar();
+        //Convert.Rhino.Model(new File3dm()).To.Svgar.Drawing();
     });
 
 });

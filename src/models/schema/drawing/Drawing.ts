@@ -1,4 +1,4 @@
-import { CreatePredicate } from "../../../predicates/create/create";
+import Create from "../../../predicates/create/create";
 import { Layer } from "../layer/Layer";
 import { State } from "../state/State";
 import { GeometryElement } from "../../geometry/GeometryElement";
@@ -187,8 +187,7 @@ export class Drawing {
         this.Layers = new Array<Layer>();
         this.States = new Array<State>();
         
-        let Create = new CreatePredicate();
-        this.Data = Create.NameData(name);
+        this.Data = Create.Svgar.NameData(name);
         this.Tags = new Array<string>();
     }
 

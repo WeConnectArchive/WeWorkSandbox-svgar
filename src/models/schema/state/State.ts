@@ -1,4 +1,4 @@
-import { CreatePredicate } from "../../../predicates/create/create";
+import Create from "../../../predicates/create/create";
 import { StyleElement } from "../../styles/StyleElement";
 
 export class State {
@@ -15,8 +15,7 @@ export class State {
     public Hidden:string[] = [];
 
     constructor(name: string) {
-        let Create = new CreatePredicate();
-        this.Data = Create.NameData(name);
+        this.Data = Create.Svgar.NameData(name);
         this.Tags = new Array<string>();
 
         this.TargetsByStyle = {};

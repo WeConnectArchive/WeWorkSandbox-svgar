@@ -1,42 +1,21 @@
-import { CreatePredicate } from "./create";
+import Create from "./create";
 import { expect } from 'chai';
 import 'mocha';
-import { Project } from "../../models/schema/Project";
 
-describe('given the predicate create', () => {
+describe('given multiple separate rhino create predicates', () => {
 
-    describe('when staging a new project', () => {
+    it('should create a Linecurve', () => {
+        let crv = Create.Rhino.LineCurve([0,0,0], [1,0,0]);
 
-        it('should return an empty project', () => {
-            let Create = new CreatePredicate();
-    
-            const result = Create.Project("empty");
-            expect(result).to.be.instanceOf(Project)
-        });
-
+        expect(crv.pointAtEnd[0]).to.equal(1);
     });
 
-    describe('when creating name data', () => {
+    it('should create a Point3dList', () => {
+        let pts = Create.Rhino.Point3dList()
+        
+        pts.add(1,2,3);
 
-        let Create = new CreatePredicate();
-        const result = Create.NameData("Test Name");
-
-        it('should create a key for "original-name"', () => {
-            expect(result["original-name"]).to.not.equal(undefined);
-        })
-
-        it('should store unmodified input under the key "original-name"', () => {
-            expect(result["original-name"]).to.equal("Test Name");
-        });
-
-        it('should create a key for "sanitized-name"', () => {
-            expect(result["sanitized-name"]).to.not.equal(undefined);
-        })
-
-        it('should store the input in snake_case under the key "sanitized-name"', () => {
-            expect(result["sanitized-name"]).to.equal("test_name");
-        });
-
+        expect(pts.count).to.equal(1);
     });
 
 });

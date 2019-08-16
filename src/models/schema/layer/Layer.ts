@@ -1,4 +1,4 @@
-import { CreatePredicate } from "../../../predicates/create/create";
+import Create from "../../../predicates/create/create";
 import { GeometryElement } from "../../geometry/GeometryElement";
 
 export class Layer {
@@ -10,8 +10,7 @@ export class Layer {
     public Tags:Array<string>;
 
     constructor(name: string) {
-        let Create = new CreatePredicate();
-        this.Data = Create.NameData(name);
+        this.Data = Create.Svgar.NameData(name);
 
         this.Normal = new Array<number>( 0, 0, -1 );
 

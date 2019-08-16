@@ -19,16 +19,38 @@ class ConvertRhinoContext {
 
 }
 
+interface RhinoModelTo {
+    Svgar: ConvertRhinoModelToSvgarContext,
+}
+
 class ConvertRhinoModelContext {
 
-    public Model: File3dm;
+    public Model!: File3dm;
+
+    public To:RhinoModelTo = {
+        Svgar: new ConvertRhinoModelToSvgarContext(this.Model),
+    }
 
     constructor(model: File3dm) {
         this.Model = model;
     }
 
-    public ToSvgar() : Drawing {
-        return new Drawing(this.Model.applicationName);
+}
+
+interface DrawingOptions {
+    Name: string;
+}
+
+class ConvertRhinoModelToSvgarContext {
+
+    private Model: File3dm;
+
+    constructor(model: File3dm) {
+        this.Model = model;
     }
 
+    public Drawing(options?: DrawingOptions) : Drawing {
+        return new Drawing(this.Model.applicationName);
+    }
+    
 }

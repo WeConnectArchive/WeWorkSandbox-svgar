@@ -1,18 +1,16 @@
-import { Project } from "../../models/schema/Project";
+import { CreateRhinoContext } from './rhino/CreateRhinoContext';
+import { CreateSvgarContext } from './svgar/CreateSvgarContext';
 
-export class CreatePredicate {
-
-    public Project(name: string) : Project {
-        return new Project().Named(name);
-    }
-
-    public NameData(name: string) : any {
-        var newData:any = {}
-
-        newData["original-name"] = name;
-        newData["sanitized-name"] = name.toLowerCase().replace(' ', '_');
-
-        return newData;
-    }
-
+export default {
+    Rhino: Rhino(),
+    Svgar: Svgar(),
 }
+
+function Rhino() : CreateRhinoContext {
+    return new CreateRhinoContext();
+}
+
+function Svgar() : CreateSvgarContext {
+    return new CreateSvgarContext();
+}
+

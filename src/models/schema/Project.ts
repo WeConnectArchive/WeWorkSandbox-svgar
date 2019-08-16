@@ -1,6 +1,6 @@
+import Create from './../../predicates/create/create';
+import { UpdatePredicate } from './../../predicates/update/update';
 import { Drawing } from "./drawing/Drawing";
-import { CreatePredicate } from "../../predicates/create/create"
-import { UpdatePredicate } from "../../predicates/update/update";
 
 export class Project {
 
@@ -12,8 +12,7 @@ export class Project {
     }
 
     public Named(name: string): Project {
-        let Create = new CreatePredicate();
-        let newData = Create.NameData(name);
+        let newData = Create.Svgar.NameData(name);
         this.Data = {...this.Data, ...newData}
 
         return this;
