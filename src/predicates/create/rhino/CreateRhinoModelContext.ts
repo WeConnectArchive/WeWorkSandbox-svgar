@@ -13,8 +13,11 @@ export class CreateRhinoModelContext {
         this.rhino = rhino;
     }
 
-    Then(callback: (model: File3dm) => any) : void {
-        callback(this._model);
+    Then(callback?: (model: File3dm) => any) : File3dm {
+        if (callback) {
+            callback(this._model)
+        }
+        return this._model;
     }
 
     WithTheseCurves(curves:(ArcCurve | Polylinecurve | Polycurve)[]) : CreateRhinoModelContext {

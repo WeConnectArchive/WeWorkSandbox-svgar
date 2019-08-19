@@ -1,6 +1,7 @@
 import Create from "./create";
 import { expect } from 'chai';
 import 'mocha';
+import { File3dm } from "rhino3dm";
 
 describe('given multiple separate rhino create predicates', () => {
 
@@ -30,14 +31,16 @@ describe('given a create rhino model context', () => {
     describe('when adding curves', () => {
         
         it('should parse arc curves', () => {
-            let file = Create.Rhino.Model().WithThesePoints([]).WithThesePoints([]);
+            let file = Create.Rhino.Model().WithThesePoints([]).WithThesePoints([]).Emit;
             expect(file).to.exist;
         });
 
         it('should allow a "then" callback', () => {
-            let file = Create.Rhino.Model().WithThesePoints([[0,0,0], [1,1,1]]).Then(x => {
-                expect(x.objects().count).to.equal(2);
+            let model= Create.Rhino.Model().WithThesePoints([[0,0,0], [1,1,1]]).Then(x => {
+                expect(x).to.exist;
             });
+
+            expect(model.objects().count).to.equal(2);
         })
 
     });
