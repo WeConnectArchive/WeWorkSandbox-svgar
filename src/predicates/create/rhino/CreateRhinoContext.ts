@@ -1,5 +1,6 @@
-import rhino3dm, { RhinoModule, LineCurve, Point3dList } from 'rhino3dm';
+import rhino3dm, { RhinoModule, LineCurve, Point3dList, File3dm } from 'rhino3dm';
 import { CreateRhinoModelContext } from './CreateRhinoModelContext';
+import fs from 'fs';
 
 export class CreateRhinoContext {
 

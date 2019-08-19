@@ -10,7 +10,6 @@ describe('given a line to convert', () => {
 
     before((done) => {
         rhino3dm().then((r) => {
-            console.log("setting");
             rhino = r;
             done();
         });

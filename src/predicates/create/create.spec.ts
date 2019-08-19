@@ -20,7 +20,7 @@ describe('given multiple separate rhino create predicates', () => {
     });
 
     it('should create a Model', () => {
-        let file = Create.Rhino.Model().Emit;
+        let file = Create.Rhino.Model();
         expect(file).to.exist;
     });
 
@@ -28,14 +28,13 @@ describe('given multiple separate rhino create predicates', () => {
 
 describe('given a create rhino model context', () => {
 
-    // describe('when adding curves', () => {
+    describe('when adding curves', () => {
         
-    //     let file = Create.Rhino.Model().WithTheseCurves([]).Emit;
+        it('should parse arc curves', () => {
+            let file = Create.Rhino.Model().WithThesePoints([]).Emit;
+            expect(file).to.exist;
+        });
 
-    //     it('should parse arc curves', () => {
-    //         expect(file).to.exist;
-    //     });
-
-    // });
+    });
 
 });
