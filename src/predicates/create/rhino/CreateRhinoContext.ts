@@ -17,7 +17,7 @@ export class CreateRhinoContext {
     }
 
     public Model() : CreateRhinoModelContext {
-        return new CreateRhinoModelContext(new this.rhino.File3dm());
+        return new CreateRhinoModelContext(new this.rhino.File3dm(), this.rhino);
     }
 
     public Point3dList() : Point3dList {

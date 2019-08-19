@@ -34,6 +34,12 @@ describe('given a create rhino model context', () => {
             expect(file).to.exist;
         });
 
+        it('should allow a "then" callback', () => {
+            let file = Create.Rhino.Model().WithThesePoints([[0,0,0], [1,1,1]]).Then(x => {
+                expect(x.objects().count).to.equal(2);
+            });
+        })
+
     });
 
 });
