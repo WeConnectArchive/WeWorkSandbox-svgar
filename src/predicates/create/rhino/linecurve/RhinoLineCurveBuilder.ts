@@ -4,8 +4,8 @@ import { RhinoLineCurveTemplate } from './RhinoLineCurveTemplate';
 export class RhinoLineCurveBuilder {
     
     private rhino!: RhinoModule
-    private from!: number[];
-    private to!: number[];
+    private from: number[] = [0,0,0];
+    private to: number[] = [1,1,1];
 
     constructor() {
         rhino3dm().then(r => {

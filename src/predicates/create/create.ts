@@ -6,7 +6,6 @@ import { CreateSvgarContext } from './svgar/CreateSvgarContext';
 
 interface CreateContext {
     Rhino: {
-        Instance: RhinoModule;
         LineCurve: {
             Builder: RhinoLineCurveBuilder,
             With: (template?: RhinoLineCurveTemplate) => LineCurve;
@@ -30,7 +29,6 @@ interface CreateContext {
 
 const Create: CreateContext = {
     Rhino: {
-        Instance: new CreateRhinoInstance().Rhino,
         LineCurve: {
             Builder: new RhinoLineCurveBuilder(),
             With: new RhinoLineCurveBuilder().Build,

@@ -21,32 +21,4 @@ export class CreateRhinoInstance {
             this._rhino = r;
         })
     }
-
-    Instance() : RhinoModule {
-        let rh: any;
-        setTimeout(x => {
-            rhino3dm().then(r => {
-                rh = r;
-            })
-        }, 500);
-        return rh as RhinoModule;
-
-
-        if (this._rhino == undefined) {
-           (async () => {
-               await this.GetInstance();
-               return this._rhino;
-           });
-           return this._rhino;
-        }
-        else {
-            return this._rhino;
-        }
-     }
-     
-     async GetInstance() {
-        rhino3dm().then(r => {
-            this._rhino = r;
-        })
-     }
 }

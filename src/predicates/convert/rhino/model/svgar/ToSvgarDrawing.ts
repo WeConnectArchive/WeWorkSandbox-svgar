@@ -4,8 +4,6 @@ import Create from '../../../../../predicates/create/create';
 
 export function ToSvgarDrawing(model: File3dm) : Drawing {
     let dwg: Drawing;
-
-    console.log(model);
     
     // rhino3dm().then(r => {
     //     let pt = new r.Point3dList(0);
