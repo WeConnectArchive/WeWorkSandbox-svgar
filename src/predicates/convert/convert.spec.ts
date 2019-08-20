@@ -1,4 +1,5 @@
 import Convert from './convert';
+import Create from './../create/create';
 import * as fs from 'fs';
 import { expect } from 'chai';
 import rhino3dm, { RhinoModule, File3dm } from 'rhino3dm';
@@ -53,8 +54,11 @@ describe('given a line to convert', () => {
 
         //     //console.log(geometry.constructor.name);
         // }
+        Create.Rhino.Model().WithThesePoints([[0,0,0]]).Then(x => {
+            let dwg = Convert.Rhino.Model(x).To.Svgar.Drawing;
+            expect(dwg).to.exist;
+        })
 
-        //Convert.Rhino.Model(new File3dm()).To.Svgar.Drawing();
     });
 
 });

@@ -1,56 +1,40 @@
-import { PolylineBuilder } from "../../models/geometry/builders/PolylineBuilder"
-import { GeometryElement } from "../../models/geometry/GeometryElement";
 import { File3dm } from 'rhino3dm';
 import { Drawing } from "../../models/schema/drawing/Drawing";
+import { ConvertRhinoContext } from './rhino/ConvertRhinoContext';
 
 export default {
-    Rhino: Rhino(),
+    Rhino: {
+        Model: RhinoModel 
+    }
 }
 
 function Rhino() : ConvertRhinoContext {
     return new ConvertRhinoContext();
 }
 
-class ConvertRhinoContext {
-
-    public Model(file: File3dm) : ConvertRhinoModelContext {
-        return new ConvertRhinoModelContext(file);
-    }
-
-}
-
 interface RhinoModelTo {
-    Svgar: ConvertRhinoModelToSvgarContext,
+    To: {
+        Svgar: {
+            Drawing: Drawing
+        }
+    }
 }
 
-class ConvertRhinoModelContext {
-
-    public Model!: File3dm;
-
-    public To:RhinoModelTo = {
-        Svgar: new ConvertRhinoModelToSvgarContext(this.Model),
+function RhinoModel(model: File3dm) : RhinoModelTo {
+    return {
+        To: {
+            Svgar: {
+                Drawing: ToSvgarDrawing(model)
+            }
+        }
     }
-
-    constructor(model: File3dm) {
-        this.Model = model;
-    }
-
 }
 
-interface DrawingOptions {
-    Name: string;
+function ToSvgarDrawing(model: File3dm) : Drawing {
+    return new Drawing(model.applicationName);
 }
 
-class ConvertRhinoModelToSvgarContext {
 
-    private Model: File3dm;
 
-    constructor(model: File3dm) {
-        this.Model = model;
-    }
 
-    public Drawing(options?: DrawingOptions) : Drawing {
-        return new Drawing(this.Model.applicationName);
-    }
-    
-}
+
