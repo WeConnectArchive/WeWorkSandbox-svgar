@@ -6,7 +6,7 @@ import { File3dm } from "rhino3dm";
 describe('given multiple separate rhino create predicates', () => {
 
     it('should create a Linecurve', () => {
-        let crv = Create.Rhino.LineCurve.With();
+        let crv = Create.Rhino.LineCurve.Builder.Build();
 
         expect(crv.pointAtEnd[0]).to.equal(1);
     });

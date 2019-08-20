@@ -13,17 +13,6 @@ export class RhinoLineCurveBuilder {
         })
     }
 
-    public static With(template?: RhinoLineCurveTemplate) : LineCurve {   
-        if (template) {
-            // Return a LineCurve based on the template
-            return new LineCurve(template.From, template.To);
-        }
-        else {
-            // Return a default linecurve
-            return new LineCurve([0,0,0], [1,1,1]);
-        }
-    }
-
     public From(from: number[]) : RhinoLineCurveBuilder {
         this.from = from;
 
@@ -36,7 +25,12 @@ export class RhinoLineCurveBuilder {
         return this;
     }
 
-    public Build(from: number[], to: number[]) : LineCurve {
+    public Build(template?: RhinoLineCurveTemplate) : LineCurve {
+        if (template) {
+            this.from = template.From;
+            this.to = template.To;
+        }
+
         return new this.rhino.LineCurve(this.from, this.to);
     }
 }

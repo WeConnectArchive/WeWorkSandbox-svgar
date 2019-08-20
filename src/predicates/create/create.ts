@@ -1,10 +1,12 @@
+import { CreateRhinoInstance } from './rhino/CreateRhinoInstance';
 import { RhinoLineCurveTemplate } from './rhino/CreateRhinoTemplates';
 import { RhinoLineCurveBuilder, RhinoModelBuilder } from './rhino/CreateRhinoBuilders';
-import { LineCurve } from 'rhino3dm';
+import { LineCurve, RhinoModule } from 'rhino3dm';
 import { CreateSvgarContext } from './svgar/CreateSvgarContext';
 
 interface CreateContext {
     Rhino: {
+        Instance: RhinoModule;
         LineCurve: {
             Builder: RhinoLineCurveBuilder,
             With: (template?: RhinoLineCurveTemplate) => LineCurve;
@@ -28,9 +30,10 @@ interface CreateContext {
 
 const Create: CreateContext = {
     Rhino: {
+        Instance: new CreateRhinoInstance().Rhino,
         LineCurve: {
             Builder: new RhinoLineCurveBuilder(),
-            With: RhinoLineCurveBuilder.With,
+            With: new RhinoLineCurveBuilder().Build,
         },
         Model: {
             Builder: new RhinoModelBuilder(),
