@@ -1,7 +1,7 @@
 
 export class CreateSvgarContext {
 
-    public NameData(name: string) : any {
+    public static NameData(name: string) : any {
         let names:any = {};
 
         names['original-name'] = name;

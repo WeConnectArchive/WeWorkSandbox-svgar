@@ -187,7 +187,7 @@ export class Drawing {
         this.Layers = new Array<Layer>();
         this.States = new Array<State>();
         
-        this.Data = Create.Svgar.NameData(name);
+        this.Data = Create.Svgar.NameData.With(name);
         this.Tags = new Array<string>();
     }
 

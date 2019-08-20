@@ -10,7 +10,7 @@ export class Layer {
     public Tags:Array<string>;
 
     constructor(name: string) {
-        this.Data = Create.Svgar.NameData(name);
+        this.Data = Create.Svgar.NameData.With(name);
 
         this.Normal = new Array<number>( 0, 0, -1 );
 

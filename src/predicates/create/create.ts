@@ -1,16 +1,51 @@
-import { CreateRhinoContext } from './rhino/CreateRhinoContext';
+import { RhinoLineCurveTemplate } from './rhino/CreateRhinoTemplates';
+import { RhinoLineCurveBuilder, RhinoModelBuilder } from './rhino/CreateRhinoBuilders';
+import { LineCurve } from 'rhino3dm';
 import { CreateSvgarContext } from './svgar/CreateSvgarContext';
 
-export default {
-    Rhino: Rhino(),
-    Svgar: Svgar(),
+interface CreateContext {
+    Rhino: {
+        LineCurve: {
+            Builder: RhinoLineCurveBuilder,
+            With: (template?: RhinoLineCurveTemplate) => LineCurve;
+        },
+        Model: {
+            Builder: RhinoModelBuilder,
+            With: "",
+        },
+        Point3dList: {
+            Builder: "",
+            With: "",
+        }
+    },
+    Svgar: {
+        NameData: {
+            // TODO: Interface for namedata
+            With: any,
+        }
+    }
 }
 
-function Rhino() : CreateRhinoContext {
-    return new CreateRhinoContext();
+const Create: CreateContext = {
+    Rhino: {
+        LineCurve: {
+            Builder: new RhinoLineCurveBuilder(),
+            With: RhinoLineCurveBuilder.With,
+        },
+        Model: {
+            Builder: new RhinoModelBuilder(),
+            With: "",
+        },
+        Point3dList: {
+            Builder: "",
+            With: "",
+        },
+    },
+    Svgar: {
+        NameData: {
+            With: CreateSvgarContext.NameData
+        }
+    }
 }
 
-function Svgar() : CreateSvgarContext {
-    return new CreateSvgarContext();
-}
-
+export default Create;

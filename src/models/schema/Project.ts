@@ -12,7 +12,7 @@ export class Project {
     }
 
     public Named(name: string): Project {
-        let newData = Create.Svgar.NameData(name);
+        let newData = Create.Svgar.NameData.With(name);
         this.Data = {...this.Data, ...newData}
 
         return this;

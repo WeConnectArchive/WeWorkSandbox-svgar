@@ -54,9 +54,10 @@ describe('given a line to convert', () => {
 
         //     //console.log(geometry.constructor.name);
         // }
-        Create.Rhino.Model().WithThesePoints([[0,0,0]]).Then(x => {
-            let dwg = Convert.Rhino.Model(x).To.Svgar.Drawing;
-            expect(dwg).to.exist;
+        
+        Create.Rhino.Model.Builder.WithThesePoints([[0,0,0]]).Then(x => {
+            let dwg = Convert.Rhino.Model(x).To.Svgar.Drawing
+            expect(dwg.Data["original-name"]).to.equal("correct");
         })
 
     });

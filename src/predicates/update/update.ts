@@ -4,7 +4,7 @@ import Create from "../create/create";
 export class UpdatePredicate {
 
     public DrawingNames(drawing: Drawing, name: string) : void {
-        var newNames = Create.Svgar.NameData(name);
+        var newNames = Create.Svgar.NameData.With(name);
 
         var newOriginalName = newNames["original-name"];
         if (newOriginalName != undefined) {

@@ -1,38 +1,19 @@
+import { ConvertRhinoModel, ConvertRhinoModelContext } from './rhino/model/ConvertRhinoModel';
 import { File3dm } from 'rhino3dm';
-import { Drawing } from "../../models/schema/drawing/Drawing";
-import { ConvertRhinoContext } from './rhino/ConvertRhinoContext';
 
-export default {
+interface ConvertContext {
     Rhino: {
-        Model: RhinoModel 
+        Model: (model: File3dm) => ConvertRhinoModelContext
     }
 }
 
-function Rhino() : ConvertRhinoContext {
-    return new ConvertRhinoContext();
-}
-
-interface RhinoModelTo {
-    To: {
-        Svgar: {
-            Drawing: Drawing
-        }
+const Convert: ConvertContext = {
+    Rhino: {
+        Model: ConvertRhinoModel
     }
 }
 
-function RhinoModel(model: File3dm) : RhinoModelTo {
-    return {
-        To: {
-            Svgar: {
-                Drawing: ToSvgarDrawing(model)
-            }
-        }
-    }
-}
-
-function ToSvgarDrawing(model: File3dm) : Drawing {
-    return new Drawing(model.applicationName);
-}
+export default Convert;
 
 
 

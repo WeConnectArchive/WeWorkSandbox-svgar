@@ -15,7 +15,7 @@ export class State {
     public Hidden:string[] = [];
 
     constructor(name: string) {
-        this.Data = Create.Svgar.NameData(name);
+        this.Data = Create.Svgar.NameData.With(name);
         this.Tags = new Array<string>();
 
         this.TargetsByStyle = {};
