@@ -1,42 +1,48 @@
-import { CreatePredicate } from "./create";
+import Create from "./create";
 import { expect } from 'chai';
 import 'mocha';
-import { Project } from "../../models/schema/Project";
+import { File3dm } from "rhino3dm";
 
-describe('given the predicate create', () => {
+// describe('given multiple separate rhino create predicates', () => {
 
-    describe('when staging a new project', () => {
+//     it('should create a Linecurve', () => {
+//         let crv = Create.Rhino.LineCurve.Builder.Build();
 
-        it('should return an empty project', () => {
-            let Create = new CreatePredicate();
-    
-            const result = Create.Project("empty");
-            expect(result).to.be.instanceOf(Project)
-        });
+//         expect(crv.pointAtEnd[0]).to.equal(1);
+//     });
 
-    });
+//     // it('should create a Point3dList', () => {
+//     //     let pts = Create.Rhino.Point3dList.Builder()
+        
+//     //     pts.add(1,2,3);
 
-    describe('when creating name data', () => {
+//     //     expect(pts.count).to.equal(1);
+//     // });
 
-        let Create = new CreatePredicate();
-        const result = Create.NameData("Test Name");
+//     // it('should create a Model', () => {
+//     //     let file = Create.Rhino.Model();
+//     //     expect(file).to.exist;
+//     // });
 
-        it('should create a key for "original-name"', () => {
-            expect(result["original-name"]).to.not.equal(undefined);
-        })
+// });
 
-        it('should store unmodified input under the key "original-name"', () => {
-            expect(result["original-name"]).to.equal("Test Name");
-        });
+// describe('given a create rhino model context', () => {
 
-        it('should create a key for "sanitized-name"', () => {
-            expect(result["sanitized-name"]).to.not.equal(undefined);
-        })
+//     describe('when adding curves', () => {
+        
+//         it('should parse arc curves', () => {
+//             let file = Create.Rhino.Model.Builder.WithThesePoints([]).WithThesePoints([]).Build;
+//             expect(file).to.exist;
+//         });
 
-        it('should store the input in snake_case under the key "sanitized-name"', () => {
-            expect(result["sanitized-name"]).to.equal("test_name");
-        });
+//         it('should allow a "then" callback', () => {
+//             let model= Create.Rhino.Model.Builder.WithThesePoints([[2,2,2], [1,1,1]]).Then(x => {
+//                 expect(x).to.exist;
+//             });
 
-    });
+//             expect(model.objects().count).to.equal(2);
+//         })
 
-});
+//     });
+
+// });

@@ -1,5 +1,3 @@
-import { CreatePredicate } from "../../predicates/create/create";
-
 export class GeometryElement {
 
     public Coordinates:Array<number>;
