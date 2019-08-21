@@ -1,18 +1,52 @@
-import { Project } from "../../models/schema/Project";
+import { CreateRhinoInstance } from './rhino/CreateRhinoInstance';
+import { RhinoLineCurveTemplate } from './rhino/CreateRhinoTemplates';
+import { RhinoLineCurveBuilder, RhinoModelBuilder } from './rhino/CreateRhinoBuilders';
+import { LineCurve, RhinoModule } from 'rhino3dm';
+import { CreateSvgarContext } from './svgar/CreateSvgarContext';
 
-export class CreatePredicate {
-
-    public Project(name: string) : Project {
-        return new Project().Named(name);
+interface CreateContext {
+    Rhino: {
+        LineCurve: {
+            Builder: RhinoLineCurveBuilder,
+            With: (template?: RhinoLineCurveTemplate) => LineCurve;
+        },
+        Model: {
+            Builder: RhinoModelBuilder,
+            With: "",
+        },
+        Point3dList: {
+            Builder: "",
+            With: "",
+        }
+    },
+    Svgar: {
+        NameData: {
+            // TODO: Interface for namedata
+            With: any,
+        }
     }
-
-    public NameData(name: string) : any {
-        var newData:any = {}
-
-        newData["original-name"] = name;
-        newData["sanitized-name"] = name.toLowerCase().replace(' ', '_');
-
-        return newData;
-    }
-
 }
+
+const Create: CreateContext = {
+    Rhino: {
+        LineCurve: {
+            Builder: new RhinoLineCurveBuilder(),
+            With: new RhinoLineCurveBuilder().Build,
+        },
+        Model: {
+            Builder: new RhinoModelBuilder(),
+            With: "",
+        },
+        Point3dList: {
+            Builder: "",
+            With: "",
+        },
+    },
+    Svgar: {
+        NameData: {
+            With: CreateSvgarContext.NameData
+        }
+    }
+}
+
+export default Create;
