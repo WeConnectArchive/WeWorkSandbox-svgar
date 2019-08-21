@@ -16,11 +16,11 @@ describe('given a .3dm file to convert', () => {
 
             let dwg = Convert.Rhino.Model(file3dm).To.Svgar.Drawing;
 
-            console.log(dwg.Layers.map(x => x.Data["sanitized-name"]));
+            //console.log(dwg.Layers.map(x => x.Data["sanitized-name"]));
 
             expect(dwg.Data["x-domain-min"]).to.exist;
             done();
         });
-    }).timeout(10000);
+    }).timeout(0);
 
 });

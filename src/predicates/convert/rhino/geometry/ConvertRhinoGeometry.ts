@@ -10,11 +10,11 @@ export interface ConvertRhinoGeometryContext {
     }
 }
 
-export function ConvertRhinoGeometry(geometry: RhinoGeometry) : ConvertRhinoGeometryContext {
+export function ConvertRhinoGeometry(geometry: RhinoGeometry, domain?: Domain) : ConvertRhinoGeometryContext {
     return {
         To: {
             Svgar: {
-                Geometry: ToSvgarGeometry(geometry),
+                Geometry: ToSvgarGeometry(geometry, domain ),
             }
         }
     }
