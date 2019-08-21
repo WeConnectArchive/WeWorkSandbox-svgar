@@ -1,16 +1,18 @@
-import { UpdateSvgarDrawingContext } from './svgar/UpdateSvgarDrawingContext';
-import { Drawing } from "../../models/schema/drawing/Drawing";
+import { UpdateSvgarDrawingContext, UpdateSvgarLayerContext } from './svgar/UpdateSvgarContexts';
+import { Drawing, Layer } from "./../../index";
 import Create from "../create/create";
 
 interface UpdateContext {
     Svgar: {
         Drawing: (drawing: Drawing) => UpdateSvgarDrawingContext,
+        Layer: (layer: Layer) => UpdateSvgarLayerContext,
     }
 }
 
 const Update : UpdateContext = {
     Svgar: {
         Drawing: UpdateSvgarDrawing,
+        Layer: UpdateSvgarLayer,
     }
 }
 
@@ -18,6 +20,10 @@ export default Update;
 
 function UpdateSvgarDrawing(drawing: Drawing) : UpdateSvgarDrawingContext {
     return new UpdateSvgarDrawingContext(drawing);
+}
+
+function UpdateSvgarLayer(layer: Layer) : UpdateSvgarLayerContext {
+    return new UpdateSvgarLayerContext(layer);
 }
 
 export class UpdatePredicate {

@@ -2,6 +2,7 @@ import rhino3dm, { RhinoModule, File3dm, File3dmObject, Layer, File3dmLayerTable
 import * as Svgar from '../../../../../index';
 import Create from '../../../../../predicates/create/create';
 import Update from '../../../../../predicates/update/update';
+import Convert from '../../../../../predicates/convert/convert';
 
 export function ToSvgarDrawing(model: File3dm) : Svgar.Drawing {
     let dwg = new Svgar.Drawing(model.applicationName);
@@ -63,7 +64,11 @@ export function ToSvgarDrawing(model: File3dm) : Svgar.Drawing {
 
         if(layerObjects) {
             layerObjects.forEach(obj => {
+                let geo = Convert.Rhino.Geometry(obj.geometry()).To.Svgar.Geometry;
 
+                if (geo) {
+                    Update.Svgar.Drawing(dwg).Layer(layer.name).AddGeometry(geo);
+                }
             });
         }
     });
