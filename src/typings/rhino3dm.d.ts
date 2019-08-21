@@ -1557,7 +1557,7 @@ declare module 'rhino3dm' {
 
 	class File3dmLayerTable {
 		/** ... */
-		count(): void;
+		count(): number;
 		/** ... */
 		get(index:number): Layer;
 		/** ... */
@@ -1600,7 +1600,7 @@ declare module 'rhino3dm' {
 
 	class File3dmObject {
 		/** ... */
-		attributes(): void;
+		attributes(): ObjectAttributes;
 		/** ... */
 		geometry(): ArcCurve | Extrusion | NurbsCurve | Point | Polycurve | Polylinecurve;
 	}
