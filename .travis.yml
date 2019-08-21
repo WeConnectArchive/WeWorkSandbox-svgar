@@ -5,7 +5,6 @@ node_js:
 
 before_script:
   - npm install
-  - mv src/typings/rhino3dm node_modules/rhino3dm/rhino3dm.d.ts
   - npm run build
 
 script:
