@@ -14,7 +14,7 @@ export function ConvertRhinoGeometry(geometry: RhinoGeometry, domain?: Domain) :
     return {
         To: {
             Svgar: {
-                Geometry: ToSvgarGeometry(geometry, domain ),
+                Geometry: ToSvgarGeometry(geometry, domain),
             }
         }
     }

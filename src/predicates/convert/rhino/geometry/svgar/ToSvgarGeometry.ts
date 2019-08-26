@@ -13,6 +13,4 @@ export function ToSvgarGeometry(geometry: RhinoGeometry, domain: Domain = { xDom
             console.log("Geometry of type " + type + " is not currently supported.");
             return undefined;
     }
-
-    return new GeometryElement([]);
 }

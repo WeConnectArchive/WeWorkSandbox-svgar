@@ -58,13 +58,15 @@ export function ToSvgarDrawing(model: File3dm) : Svgar.Drawing {
         // Determine implicit extents (bounding box of all objects)
     }
 
+    let extents = GetDrawingDomain(dwg);
+
     // Convert each rhino layer to a svgar drawing layer
     allLayers.forEach(layer => {
         let layerObjects = objectContainer.get(layer.name);
 
         if(layerObjects) {
             layerObjects.forEach(obj => {
-                let geo = Convert.Rhino.Geometry(obj.geometry()).To.Svgar.Geometry;
+                let geo = Convert.Rhino.Geometry(obj.geometry(), extents).To.Svgar.Geometry;
 
                 if (geo) {
                     Update.Svgar.Drawing(dwg).Layer(layer.name).AddGeometry(geo);
@@ -74,4 +76,12 @@ export function ToSvgarDrawing(model: File3dm) : Svgar.Drawing {
     });
 
     return dwg;
+}
+
+function GetDrawingDomain(drawing: Svgar.Drawing): Domain {
+    return {
+        xDomain: [+drawing.Data["x-domain-min"], +drawing.Data["x-domain-max"]],
+        yDomain: [+drawing.Data["y-domain-min"], +drawing.Data["y-domain-max"]],
+        zDomain: [+drawing.Data["z-domain-min"], +drawing.Data["z-domain-max"]]
+    }
 }

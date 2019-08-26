@@ -2795,7 +2795,7 @@ declare module 'rhino3dm' {
 
 		constructor(initialCapacity: number);
 		/** ... */
-		get(): void;
+		get(index: number): number[];
 		/** ... */
 		set(): void;
 		/** ... */

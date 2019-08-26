@@ -1,8 +1,9 @@
 import { Polylinecurve } from "rhino3dm";
-import { GeometryElement } from "../../../../../models/geometry/GeometryElement";
+import { GeometryElement } from "./../../../../../index";
+import Convert from './../../../convert';
 
 export function ToSvgarGeometry(curve: Polylinecurve, domain: Domain) : GeometryElement {
-    console.log("Converting Polylinecurve to Svgar geometry!");
-
-    return new GeometryElement([]);
+    
+    // Defer Polylinecurve conversion to equivalent polyline conversion
+    return Convert.Rhino.Polyline(curve.ToPolyline(), domain).To.Svgar.Geometry;
 }
