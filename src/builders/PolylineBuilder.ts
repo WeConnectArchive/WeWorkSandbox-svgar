@@ -8,7 +8,7 @@ export default class PolylineBuilder {
         this.coordinates = [startX, startY];
     }
 
-    public Build(): SvgarPath {
+    public build(): SvgarPath {
         let c: number[] = [];
 
         for (let i = 0; i < this.coordinates.length - 2; i += 2) {
@@ -26,12 +26,12 @@ export default class PolylineBuilder {
         return new SvgarPath(c);
     }
 
-    public LineTo(x: number, y: number): PolylineBuilder {
+    public lineTo(x: number, y: number): PolylineBuilder {
         this.coordinates = this.coordinates.concat([x, y]);
         return this;
     }
 
-    public VerticalTo(y: number): PolylineBuilder {
+    public verticalTo(y: number): PolylineBuilder {
         this.coordinates = this.coordinates.concat([
             this.coordinates[this.coordinates.length - 2], 
             y
@@ -39,7 +39,7 @@ export default class PolylineBuilder {
         return this;
     }
 
-    public HorizontalTo(x: number): PolylineBuilder {
+    public horizontalTo(x: number): PolylineBuilder {
         this.coordinates = this.coordinates.concat([
             x,
             this.coordinates[this.coordinates.length - 1]
@@ -47,7 +47,15 @@ export default class PolylineBuilder {
         return this;
     }
 
-    public GetCurrentCoordinates(): number[] {
+    public close(): PolylineBuilder {
+        this.coordinates = this.coordinates.concat([
+            this.coordinates[0],
+            this.coordinates[1]
+        ]);
+        return this;
+    }
+
+    public getCurrentCoordinates(): number[] {
         return this.coordinates.concat([]);
     }
 }

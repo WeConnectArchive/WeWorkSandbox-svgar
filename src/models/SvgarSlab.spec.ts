@@ -8,7 +8,7 @@ describe('given a new default svgar slab', () => {
 
     describe('when getting its id', () => {
 
-        const id = slab.GetId();
+        const id = slab.getId();
 
         it('should return a string', () => {
             expect(id).to.exist;
@@ -22,7 +22,7 @@ describe('given a new default svgar slab', () => {
 
     describe('when getting its name', () => {
 
-        const name = slab.GetName();
+        const name = slab.getName();
 
         it('should return a string', () => {
             expect(typeof name).to.equal("string");
