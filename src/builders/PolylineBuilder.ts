@@ -4,8 +4,8 @@ export default class PolylineBuilder {
 
     private coordinates: number[];
     
-    constructor(startPoint: number[]) {
-        this.coordinates = [startPoint[0], startPoint[1]];
+    constructor(startX: number, startY: number) {
+        this.coordinates = [startX, startY];
     }
 
     public Build(): SvgarPath {
@@ -26,8 +26,8 @@ export default class PolylineBuilder {
         return new SvgarPath(c);
     }
 
-    public MoveTo(x: number, y: number): PolylineBuilder {
-        this.coordinates.concat([x, y]);
+    public LineTo(x: number, y: number): PolylineBuilder {
+        this.coordinates = this.coordinates.concat([x, y]);
         return this;
     }
 
@@ -45,5 +45,9 @@ export default class PolylineBuilder {
             this.coordinates[this.coordinates.length - 1]
         ]);
         return this;
+    }
+
+    public GetCurrentCoordinates(): number[] {
+        return this.coordinates.concat([]);
     }
 }
