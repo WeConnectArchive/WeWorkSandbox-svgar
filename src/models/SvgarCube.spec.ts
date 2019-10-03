@@ -1,12 +1,26 @@
 import SvgarCube from './SvgarCube';
 import SvgarSlab from './SvgarSlab';
+import PolylineBuilder from './../builders/PolylineBuilder'
 import { expect } from 'chai';
 import 'mocha';
 
 describe("given a svgar cube with one slab", () => {
 
     let svgar = new SvgarCube();
-    svgar.slabs.push(new SvgarSlab('test'));
+    let slab = new SvgarSlab('test');
+    let square = new PolylineBuilder(5, 10)
+        .lineTo(10, 5)
+        .lineTo(10, 10)
+        .lineTo(5, 10)
+        .close()
+        .build()
+    square.setTag("square");
+
+    slab.addPath(square)
+
+    svgar.slabs.push(slab);
+
+    svgar.frame([10, 10], 10, 10);
 
     describe("when compiling", () => {
 

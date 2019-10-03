@@ -27,8 +27,9 @@ export default class SvgarCube {
 
         // Compile slabs
         this.slabs.forEach(slab => {
+
             // Compile style information
-            let styleCache:string[] = [];
+            let styleCache: string[] = [];
 
             slab.getStyles().forEach(style => {
                 let s = `#${slab.getName()} > .${style.name} {\n`;
@@ -43,12 +44,29 @@ export default class SvgarCube {
             style.push(styleCache.join('\n'));
 
             // Compile geometric information
-        })
+            let geometryCache: string[] = [`<g id="${slab.getName()}">\n`];
+
+            slab.getGeometry().forEach(geo => {
+                let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" d="`
+                
+                g += `" />`;
+
+                geometryCache.push(g)
+            });
+
+            geometryCache.push("\n</g>");
+
+            geometry.push(geometryCache.join('\n'));
+
+        });
 
         style.push("</style>\n");
 
         // Commit information from slabs to svg string
         svg += style.join('\n');
+        svg += '\n';
+        svg += geometry.join('\n');
+        svg += '\n';
 
         // Finish compilation
         svg += "\n</svg>"

@@ -54,6 +54,10 @@ export default class SvgarSlab {
         this.geometry = [];
     }
 
+    public addPath(path: SvgarPath): void {
+        this.geometry.push(path);
+    }
+
     public getId(): string {
         return this.id;
     }
@@ -64,6 +68,15 @@ export default class SvgarSlab {
 
     public getStyles(): SvgarStyle[] {
         return this.styles;
+    }
+
+    public getGeometry(): SvgarPath[] {
+        return this.geometry;
+    }
+
+    // Given a tag, return its style in the active state
+    public mapTagToStyle(tag: string): string {
+        return this.states.find(x => x.name == this.state)?.styles[tag] ?? "default";
     }
 
 }

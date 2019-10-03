@@ -25,11 +25,19 @@ export default class SvgarPath {
         this.events[event] = fct;
     }
 
+    public setTag(tag: string): void {
+        this.tag = tag;
+    }
+
+    public getTag(): string {
+        return this.tag;
+    }
+
     public isClosed(): boolean {
         if(!this.isContiguous()) {
             return false;
         }
-        
+
         const xMatch = this.coordinates[0] == this.coordinates[this.coordinates.length - 2];
         const yMatch = this.coordinates[1] == this.coordinates[this.coordinates.length - 1];
         
