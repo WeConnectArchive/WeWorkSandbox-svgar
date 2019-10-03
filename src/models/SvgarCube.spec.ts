@@ -8,7 +8,7 @@ describe("given a svgar cube with one slab", () => {
 
     let svgar = new SvgarCube();
     let slab = new SvgarSlab('test');
-    let square = new PolylineBuilder(5, 10)
+    let square = new PolylineBuilder(5, 5)
         .lineTo(10, 5)
         .lineTo(10, 10)
         .lineTo(5, 10)
@@ -20,7 +20,7 @@ describe("given a svgar cube with one slab", () => {
 
     svgar.slabs.push(slab);
 
-    svgar.frame([10, 10], 10, 10);
+    svgar.frame([10, 10], 12, 12);
 
     describe("when compiling", () => {
 

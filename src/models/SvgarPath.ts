@@ -33,6 +33,10 @@ export default class SvgarPath {
         return this.tag;
     }
 
+    public getCoordinates(): number[] {
+        return this.coordinates;
+    }
+
     public isClosed(): boolean {
         if(!this.isContiguous()) {
             return false;

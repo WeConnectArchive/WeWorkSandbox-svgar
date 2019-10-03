@@ -48,7 +48,30 @@ export default class SvgarCube {
 
             slab.getGeometry().forEach(geo => {
                 let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" d="`
+
+                const coordinates = geo.getCoordinates();
+
+                let c:number[] = [];
                 
+                for (let i = 0; i < coordinates.length; i += 8) {
+
+                    for (let j = 0; j < 8; j++) {
+                        let isY: boolean = j % 2 == 1;
+                        let size: number = isY ? height : width;
+                        c.push(this.aggregateTransform(coordinates[i + j], size, isY))
+                    }
+
+                    if (i == 0) {
+                        g += `M ${c[i]} ${c[i + 1]} `
+                    }
+
+                    g += `C ${c[i + 2]} ${c[i + 3]} ${c[i + 4]} ${c[i + 5]} ${c[i + 6]} ${c[i + 7]} `
+                }
+
+                if (geo.isClosed()) {
+                    g += "Z";
+                }
+
                 g += `" />`;
 
                 geometryCache.push(g)
@@ -75,12 +98,20 @@ export default class SvgarCube {
     }
 
     private aggregateTransform(value: number, size: number, isY: boolean): number {
-        return (((value - this.scope.minimum[+isY]) / (this.scope.maximum[+isY] - this.scope.minimum[+isY])) - this.scope.minimum[+isY]) * size;
+        const normalized = (value - this.scope.minimum[+isY]) / (this.scope.maximum[+isY] - this.scope.minimum[+isY])
+        const inverted = isY ? 1 - normalized : normalized;
+        const final = inverted * size;
+        
+        return final;
     }
 
     // Change current camera position based on a center point and rectangular extents
     public frame(anchor: number[], w?: number, h?: number): void {
+        const xDomain = w ?? this.scope.maximum[0] - this.scope.minimum[0];
+        const yDomain = h ?? this.scope.maximum[1] - this.scope.minimum[1];
 
+        this.scope.minimum = [anchor[0] - (xDomain / 2), anchor[1] - (yDomain / 2)];
+        this.scope.maximum = [anchor[0] + (xDomain / 2), anchor[1] + (yDomain / 2)];
     }
 
     // Add a given slab to the svgar cube
