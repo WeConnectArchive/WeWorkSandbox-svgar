@@ -3,6 +3,7 @@ dist/
 .nyc_output/
 coverage/
 .vscode
+.vs
 
 *.rhl
 *.3dmbak

@@ -1,5 +1,5 @@
 import * as uuid from 'uuid/v4';
-import SvgarGeometry from './SvgarPath';
+import SvgarPath from './SvgarPath';
 
 export default class SvgarSlab {
 
@@ -22,7 +22,7 @@ export default class SvgarSlab {
     }[]
 
     private Anchor: number[];
-    private Geometry: SvgarGeometry[];
+    private Geometry: SvgarPath[];
 
     constructor(name: string) {
         this.Name = name;
@@ -48,6 +48,14 @@ export default class SvgarSlab {
 
         this.Anchor = [0, 0];
         this.Geometry = [];
+    }
+
+    public GetId(): string {
+        return this.Id;
+    }
+
+    public GetName(): string {
+        return this.Name;
     }
 
 }
