@@ -16,7 +16,7 @@ Svgar offers:
 * High fidelity vector visuals without an imposed graphic opinion. If svg can do it, svgar can do it.
 * A new paradigm of cooking-based package names because all the good animals and bugs are taken.
 
-**(Under active development. Targeting an August `0.2.X` public release.)**
+**(Under active development. Targeting November for `0.3.X` feature set.)**
 
 ## Installation
 

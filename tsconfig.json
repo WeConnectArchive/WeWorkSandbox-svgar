@@ -7,6 +7,6 @@
         "outDir": "dist",
         "lib": ["es2016", "dom"],
         "strict": true,
-        "baseUrl": ".",
-    },
+        "baseUrl": "."
+    }
 }
