@@ -1,6 +1,6 @@
 {
   "name": "svgar",
-  "version": "0.2.3",
+  "version": "0.3.1",
   "description": "svg, but a little sweeter",
   "main": "dist/index.js",
   "module": "commonjs",
@@ -17,6 +17,7 @@
       ".tsx"
     ],
     "exclude": [
+      "**/*.spec.ts",
       "**/*.d.ts",
       "dist/**",
       "coverage/**"
@@ -48,10 +49,10 @@
     "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^14.1.1",
     "ts-node": "6.2.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.7.0-beta"
   },
   "dependencies": {
-    "@types/node": "^12.7.1",
-    "rhino3dm": "^0.1.9"
+    "@types/uuid": "^3.4.5",
+    "uuid": "^3.3.3"
   }
 }
