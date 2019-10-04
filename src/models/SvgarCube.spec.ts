@@ -1,6 +1,7 @@
 import SvgarCube from './SvgarCube';
 import SvgarSlab from './SvgarSlab';
 import PolylineBuilder from './../builders/PolylineBuilder'
+import CircleBuilder from './../builders/CircleBuilder';
 import { expect } from 'chai';
 import 'mocha';
 
@@ -26,13 +27,16 @@ describe("given a svgar cube with one slab", () => {
     fill.setElevation(1);
     fill.setTag("fill");
 
+    let circle = new CircleBuilder(14, 14, 1).build();
+    circle.setTag("circle");
+
     slab.setAllStyles([
         {
             name: "outline",
             attributes: {
                 "fill": "none",
                 "stroke": "#000000",
-                "stroke-width": "1px"
+                "stroke-width": "2.5px"
             }
         },
         {
@@ -64,6 +68,7 @@ describe("given a svgar cube with one slab", () => {
 
     slab.addPath(square)
     slab.addPath(fill)
+    slab.addPath(circle);
 
     svgar.slabs.push(slab);
 

@@ -104,6 +104,17 @@ export default class SvgarSlab {
 
     public setAllStyles(styles: SvgarStyle[]): void {
         this.styles = styles;
+
+        if (this.styles.find(x => x.name == "default") == undefined) {
+            this.addStyle({
+                name: "default",
+                attributes: {
+                    "fill": "none",
+                    "stroke": "#000000",
+                    "stroke-width": "1px"
+                }
+            })
+        }
     }
 
     public addStyle(style: SvgarStyle): void {
