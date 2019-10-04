@@ -5,18 +5,19 @@
 [![npm](https://img.shields.io/npm/v/svgar.svg?style=flat-square)](https://www.npmjs.com/package/svgar)
 [![NPM](https://img.shields.io/npm/l/svgar.svg?style=flat-square)](https://github.com/WeWorkSandbox/svgar/blob/master/LICENSE)
 
-Syntactic sugar for reactive and data-infused svg drawings. No more Rhino screenshots!
+Svgar (pronounced sugar) is a fluent syntax wrapper for creating reactive svg drawings.
 
 Design automation tools are constrained by the interfaces they're written for. Grasshopper and Dynamo provide battle-tested geometric tools, but consideration for graphical output or user experience often requires [some pretty extreme measures](https://www.food4rhino.com/app/human-ui). What if we could use the drawing *as* the interface?
 
-Svgar (pronounced sugar) drawings are collections of layers and states. Layers contain logical groups of geometry, and states contain svg style definitions. The library provides a fluent syntax for composing information, attaching events/classes, and switching between states. The output is still svg, but the drawing process is a little bit sweeter.
+Svgar cubes (read: drawings) contain a camera object and a collection 'stateful' layer objects called slabs. Slabs contain tagged 2D geometry, an encapsulated set of css styles, and any number of state declarations that map styles to tags. The library provides a fluent syntax for intuitively composing drawings from these. This schema offers three primary ways to dynamically control graphics:
 
-Svgar offers:
+- Altering the actual geometry
+- Changing states for one/many slabs
+- Moving the camera
 
-* High fidelity vector visuals without an imposed graphic opinion. If svg can do it, svgar can do it.
-* A new paradigm of cooking-based package names because all the good animals and bugs are taken.
+Anything svg can do, svgar can do! But now the drawing process is a little bit sweeter.
 
-**(Under active development. Targeting November for `0.3.X` feature set.)**
+**(Under active development. Targeting November for a feature-complete `0.3.X`.)**
 
 ## Installation
 
