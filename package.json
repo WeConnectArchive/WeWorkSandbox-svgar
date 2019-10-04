@@ -1,6 +1,6 @@
 {
   "name": "svgar",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "svg, but a little sweeter",
   "main": "dist/index.js",
   "module": "commonjs",
@@ -53,7 +53,6 @@
   },
   "dependencies": {
     "@types/uuid": "^3.4.5",
-    "rhino3dm": "^0.1.9",
     "uuid": "^3.3.3"
   }
 }
