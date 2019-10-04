@@ -5,6 +5,8 @@ export default class SvgarPath {
     private id: string;
     private tag: string;
     private coordinates: number[];
+    private elevation: number;
+
     private events: {
         [event: string]: (arg: any) => void,
     }
@@ -14,6 +16,7 @@ export default class SvgarPath {
     constructor(coordinates: number[]) {
         this.id = uuid.default();
         this.tag = "default";
+        this.elevation = 0;
 
         this.coordinates = coordinates;
         this.segments = this.coordinates.length / 8;
@@ -25,12 +28,20 @@ export default class SvgarPath {
         this.events[event] = fct;
     }
 
+    public getTag(): string {
+        return this.tag;
+    }
+
     public setTag(tag: string): void {
         this.tag = tag;
     }
 
-    public getTag(): string {
-        return this.tag;
+    public getElevation(): number {
+        return this.elevation;
+    }
+
+    public setElevation(elevation: number): void {
+        this.elevation = elevation;
     }
 
     public getCoordinates(): number[] {

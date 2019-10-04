@@ -13,10 +13,57 @@ describe("given a svgar cube with one slab", () => {
         .lineTo(10, 10)
         .lineTo(5, 10)
         .close()
-        .build()
+        .build();
+    square.setElevation(2);
     square.setTag("square");
 
+    let fill = new PolylineBuilder(4, 4)
+        .lineTo(9, 4)
+        .lineTo(9, 9)
+        .lineTo(4, 9)
+        .close()
+        .build();
+    fill.setElevation(1);
+    fill.setTag("fill");
+
+    slab.setAllStyles([
+        {
+            name: "outline",
+            attributes: {
+                "fill": "none",
+                "stroke": "#000000",
+                "stroke-width": "1px"
+            }
+        },
+        {
+            name: "filled",
+            attributes: {
+                "fill": "gainsboro",
+                "stroke": "#000000",
+                "stroke-width": "0px"
+            }
+        },
+        {
+            name: "filled:hover",
+            attributes: {
+                "cursor": "pointer",
+                "fill": "grey",
+            }
+        }
+    ]);
+
+    slab.setAllStates([
+        {
+            name: "default",
+            styles: {
+                "square": "outline",
+                "fill": "filled"
+            }
+        }
+    ]);
+
     slab.addPath(square)
+    slab.addPath(fill)
 
     svgar.slabs.push(slab);
 

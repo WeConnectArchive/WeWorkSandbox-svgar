@@ -54,24 +54,94 @@ export default class SvgarSlab {
         this.geometry = [];
     }
 
-    public addPath(path: SvgarPath): void {
-        this.geometry.push(path);
-    }
-
     public getId(): string {
         return this.id;
+    }
+
+    public newId(): void {
+        this.id = uuid.default();
     }
 
     public getName(): string {
         return this.name;
     }
 
-    public getStyles(): SvgarStyle[] {
+    public setName(name: string): void {
+        this.name = name;
+    }
+
+    public getElevation(): number {
+        return this.elevation;
+    }
+
+    public setElevation(elevation: number): void {
+        this.elevation = elevation;
+    }
+
+    public getCurrentState(): string {
+        return this.state;
+    }
+
+    public setCurrentState(state: string): void {
+        this.state = state;
+    }
+
+    public getAllStates(): SvgarState[] {
+        return this.states;
+    }
+
+    public setAllStates(states: SvgarState[]): void {
+        this.states = states;
+    }
+
+    public addState(state: SvgarState): void {
+        this.states.push(state);
+    }
+
+    public getAllStyles(): SvgarStyle[] {
         return this.styles;
     }
 
-    public getGeometry(): SvgarPath[] {
+    public setAllStyles(styles: SvgarStyle[]): void {
+        this.styles = styles;
+    }
+
+    public addStyle(style: SvgarStyle): void {
+        this.styles.push(style);
+    }
+
+    public getAnchor(): number[] {
+        return this.anchor;
+    }
+
+    public setAnchor(x: number, y: number): void {
+        this.anchor = [x, y];
+    }
+
+    public getAllGeometry(): SvgarPath[] {
         return this.geometry;
+    }
+
+    public setAllGeometry(geometry: SvgarPath[]): void {
+        this.geometry = geometry;
+    }
+
+    public addPath(path: SvgarPath): void {
+        this.geometry.push(path);
+    }
+
+    public clone(): SvgarSlab {
+        let clone = new SvgarSlab(this.name);
+
+        clone.newId();
+        clone.setElevation(this.elevation);
+        clone.setCurrentState(this.state);
+        clone.setAllStates(this.states);
+        clone.setAllStyles(this.styles);
+        clone.setAnchor(this.anchor[0], this.anchor[1]);
+        clone.setAllGeometry(this.geometry);
+
+        return clone;
     }
 
     // Given a tag, return its style in the active state

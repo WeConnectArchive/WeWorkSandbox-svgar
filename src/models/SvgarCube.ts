@@ -26,12 +26,12 @@ export default class SvgarCube {
         let geometry: string[] = [];
 
         // Compile slabs
-        this.slabs.forEach(slab => {
+        this.slabs.sort((a, b) => a.getElevation() - b.getElevation()).forEach(slab => {
 
             // Compile style information
             let styleCache: string[] = [];
 
-            slab.getStyles().forEach(style => {
+            slab.getAllStyles().forEach(style => {
                 let s = `#${slab.getName()} > .${style.name} {\n`;
 
                 Object.keys(style.attributes).forEach(att => {
@@ -46,7 +46,7 @@ export default class SvgarCube {
             // Compile geometric information
             let geometryCache: string[] = [`<g id="${slab.getName()}">\n`];
 
-            slab.getGeometry().forEach(geo => {
+            slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
                 let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" d="`
 
                 const coordinates = geo.getCoordinates();
@@ -116,7 +116,7 @@ export default class SvgarCube {
 
     // Add a given slab to the svgar cube
     public place(slab: SvgarSlab): void {
-
+        
     }
 
     // Add a given slab to the svgar cube with a custom anchor point
