@@ -128,15 +128,17 @@ export default class SvgarCube {
     // Activate any declared event listeners
     public listen(): void {
         document.querySelectorAll("path").forEach(x => {
-            let slab = Locate().svgar.slab.withId(x.id).in.svgar.cube(this);
+            const path = Locate().svgar.path.withId(x.id).in.svgar.cube(this);
 
-            slab?.getAllGeometry().forEach(geo => {
-                const events = geo.getAllEvents();
-                Object.keys(events).forEach(e => {
-                    
-                })
-            })
-            //If geometry element of x.id has any attached events, add listener!
+            const events = path?.getAllEvents();
+
+            if (events == undefined) {
+                return;
+            }
+
+            Object.keys(events).forEach(e => {
+                document.addEventListener(e, events[e])
+            });
         })
     }
 }
