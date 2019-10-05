@@ -6,6 +6,7 @@ export default function Locate(): LocateContext {
     const context: LocateContext = {
         svgar: {
             slab: new LocateSvgarSlabContext(),
+            path: new LocateSvgarPathContext(),
         }
     }
 
@@ -15,6 +16,7 @@ export default function Locate(): LocateContext {
 interface LocateContext {
     svgar: {
         slab: LocateSvgarSlabContext,
+        path: LocateSvgarPathContext,
     }
 }
 
@@ -23,14 +25,14 @@ class LocateSvgarSlabContext {
     private withIdFilter: string = "";
     private withNameFilter: string = "";
 
-    public in: LocateSvgarSlabInContext = {
-        svgar: {
-            cube: this.locateInSvgarCube,
-        }
-    }
+    public in: LocateSvgarSlabInContext;
 
     constructor() {
-
+        this.in = {
+            svgar: {
+                cube: this.locateInSvgarCube.bind(this),
+            }
+        }
     }
 
     public withId(id: string): LocateSvgarSlabContext {
@@ -54,7 +56,7 @@ class LocateSvgarSlabContext {
             slabs = slabs.concat(cube.slabs.filter(x => x.getName() == this.withNameFilter));
         }
 
-        return slabs[0] ?? undefined;
+        return slabs[0];
     }
 }
 
@@ -68,15 +70,15 @@ class LocateSvgarPathContext {
     
     private withIdFilter: string = "";
 
-    public in: LocateSvgarPathInContext = {
-        svgar: {
-            cube: this.locateInSvgarCube,
-            slab: this.locateInSvgarSlab,
-        }
-    }
+    public in: LocateSvgarPathInContext; 
 
     constructor() {
-
+        this.in ={
+            svgar: {
+                cube: this.locateInSvgarCube.bind(this),
+                slab: this.locateInSvgarSlab.bind(this),
+            }
+        }
     }
 
     public withId(name: string): LocateSvgarPathContext {
