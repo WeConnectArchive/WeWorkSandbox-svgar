@@ -79,7 +79,7 @@ describe("given a svgar cube with one slab", () => {
         let svg = svgar.compile(100, 100);
 
         it("should store styles at the top of the svg markup", () => {
-            //console.log(svg);
+            console.log(svg);
         });
 
     });

@@ -48,7 +48,7 @@ export default class SvgarCube {
             let geometryCache: string[] = [`<g id="${slab.getName()}">\n`];
 
             slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
-                let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" d="`
+                let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`
 
                 const coordinates = geo.getCoordinates();
 
