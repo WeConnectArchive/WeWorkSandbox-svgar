@@ -28,6 +28,10 @@ export default class SvgarPath {
         this.events[event] = fct;
     }
 
+    public getAllEvents() {
+        return this.events;
+    }
+
     public getId(): string {
         return this.id;
     }

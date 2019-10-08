@@ -1,4 +1,5 @@
 import SvgarSlab from './SvgarSlab';
+import Locate from './../predicates/Locate';
 
 export default class SvgarCube {
 
@@ -47,7 +48,7 @@ export default class SvgarCube {
             let geometryCache: string[] = [`<g id="${slab.getName()}">\n`];
 
             slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
-                let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" d="`
+                let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`
 
                 const coordinates = geo.getCoordinates();
 
@@ -127,7 +128,17 @@ export default class SvgarCube {
     // Activate any declared event listeners
     public listen(): void {
         document.querySelectorAll("path").forEach(x => {
-            //If geometry element of x.id has any attached events, add listener!
+            const path = Locate().svgar.path.withId(x.id).in.svgar.cube(this);
+
+            const events = path?.getAllEvents();
+
+            if (events == undefined) {
+                return;
+            }
+
+            Object.keys(events).forEach(e => {
+                document.addEventListener(e, events[e])
+            });
         })
     }
 }
