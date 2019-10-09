@@ -1,21 +1,12 @@
 import SvgarSlab from './SvgarSlab';
 import Locate from './../predicates/Locate';
 
-type SvgarScope = "root" | "defs" | "cube";
+type SvgarScope = "root" | "style" | "defs" | "global" | "local";
 
 export default class SvgarCube {
 
     // Current svgar data
-    private name: string;
     public slabs: SvgarSlab[];
-    private placements: {
-        slabName: string,
-        elevation: number,
-        instances: {
-            x: number,
-            y: number
-        }[]
-    }[] = [];
     public scope: {
         minimum: number[],
         maximum: number[],
@@ -23,16 +14,19 @@ export default class SvgarCube {
 
     // Cached output by scope
     private root: string = "";
+    private style: string = "";
     private defs: string = "";
-    private cube: string = "";
+    private global: string = "";
+    private local: string = "";
 
-    // Refresh flags 
+    // Refresh flags
     private refreshRoot: boolean = true;
+    private refreshStyle: boolean = true;
     private refreshDefs: boolean = true;
-    private refreshCube: boolean = true;
+    private refreshGlobal: boolean = true;
+    private refreshLocal: boolean = true;
 
-    constructor(name?: string) {
-        this.name = name || "";
+    constructor() {
         this.slabs = [];
         this.scope = {
             minimum: [0, 0],
@@ -46,116 +40,90 @@ export default class SvgarCube {
         // Compile root scope
         if (this.refreshRoot) {
             this.refreshRoot = false;
-
-            const min = this.scope.minimum;
-            const max = this.scope.maximum;
-
-            const xmlns = `xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"`;
-            const viewBox = `viewBox="${min[0]} ${-max[1]} ${max[0] - min[0]} ${max[1] - min[1]}"`;
-            const divBox = `width="${width}" height="${height}"`
-
-            this.root = ["<svg", xmlns, viewBox, divBox, ">\n"].join(" ");
+            this.root = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${this.scope.minimum[0]} ${-this.scope.maximum[1]} ${this.scope.maximum[0] - this.scope.minimum[0]} ${this.scope.maximum[1] - this.scope.minimum[1]}" width="${width}" height="${height}">\n`
         }
 
-        // Compile defs scope
-        let defs: string[] = ["<defs>"]
+        // Initialize arrays for style and geometry
+        let style: string[] = ["\n<style>\n"];
+        let geometry: string[] = [];
 
-        // Compile each slab
+        // Compile slabs
         this.slabs.sort((a, b) => a.getElevation() - b.getElevation()).forEach(slab => {
 
-            defs.push(slab.compile());
+            // Compile style scope
+            if (this.refreshStyle) {
+                let styleCache: string[] = [];
 
-            // (Chuck) The slab will flag itself as refreshed on compile if anything changed.
-            if (slab.refresh) {
-                this.refreshDefs = true;
+                slab.getAllStyles().forEach(style => {
+                    let s = `#${slab.getName()} > .${style.name} {\n`;
+    
+                    Object.keys(style.attributes).forEach(att => {
+                        s += `\t${att}: ${style.attributes[att]};\n`
+                    });
+    
+                    styleCache.push(s += '}\n');
+                });
+    
+                style.push(styleCache.join('\n'));
             }
 
-            // if (slab.refresh) {
-            //     let styleCache: string[] = [];
-
-            //     slab.getAllStyles().forEach(style => {
-            //         let s = `#${slab.getName()} > .${style.name} {\n`;
-    
-            //         Object.keys(style.attributes).forEach(att => {
-            //             s += `\t${att}: ${style.attributes[att]};\n`
-            //         });
-    
-            //         styleCache.push(s += '}\n');
-            //     });
-    
-            //     style.push(styleCache.join('\n'));
-            // }
-            // else {
-                
-            // }
-
             // Compile geometry scope (defs, global, local)
-            // if (this.refreshGlobal) {
-            //     let geometryCache: string[] = [`<g id="${slab.getName()}">\n`];
+            if (this.refreshGlobal) {
+                let geometryCache: string[] = [`<g id="${slab.getName()}">\n`];
 
-            //     slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
-            //         let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`
+                slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
+                    let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`
     
-            //         const coordinates = geo.getCoordinates();
+                    const coordinates = geo.getCoordinates();
     
-            //         let c:number[] = [];
+                    let c:number[] = [];
                     
-            //         for (let i = 0; i < coordinates.length; i += 8) {
+                    for (let i = 0; i < coordinates.length; i += 8) {
     
-            //             for (let j = 0; j < 8; j++) {
-            //                 //let isY: boolean = j % 2 == 1;
-            //                 //let size: number = isY ? height : width;
-            //                 c.push(coordinates[i + j])
-            //             }
+                        for (let j = 0; j < 8; j++) {
+                            //let isY: boolean = j % 2 == 1;
+                            //let size: number = isY ? height : width;
+                            c.push(coordinates[i + j])
+                        }
     
-            //             if (i == 0) {
-            //                 g += `M ${c[i]} ${-c[i + 1]} `
-            //             }
+                        if (i == 0) {
+                            g += `M ${c[i]} ${-c[i + 1]} `
+                        }
     
-            //             g += `C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]}`
-            //         }
+                        g += `C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]}`
+                    }
     
-            //         if (geo.isClosed()) {
-            //             g += " Z";
-            //         }
+                    if (geo.isClosed()) {
+                        g += " Z";
+                    }
     
-            //         g += `" />`;
+                    g += `" />`;
     
-            //         geometryCache.push(g)
-            //     });
+                    geometryCache.push(g)
+                });
     
-            //     geometryCache.push("\n</g>");
+                geometryCache.push("\n</g>");
     
-            //     geometry.push(geometryCache.join('\n'));
-            // }
+                geometry.push(geometryCache.join('\n'));
+            }
 
         });
 
-        if (this.refreshDefs) {
-            this.refreshDefs = false;
-            defs.push("</defs>")
-            this.defs = defs.join('\n');
+        style.push("</style>\n");
+
+        // Commit information from slabs to svg string
+        if (this.refreshStyle) {
+            this.refreshStyle = false;
+            this.style = style.join('\n');
         }
-
-        // Compile cube scope
-        if (this.refreshCube) {
-            this.refreshCube = false;
-
-            let cube: string[] = [`<g id="${this.name}" >`];
-
-            this.placements.sort((a, b) => a.elevation - b.elevation).forEach(x => {
-                x.instances.forEach(loc => {
-                    cube.push(`<use x="${loc.x}" y="${-loc.y}" xlink:href="#${x.slabName}" />`)
-                });
-            });
-
-            cube.push("</g>");
-
-            this.cube = cube.join("\n");
+        
+        if (this.refreshGlobal) {
+            this.refreshGlobal = false;
+            this.global = geometry.join('\n');
         }
 
         // Finish compilation
-        let svg = [this.root, this.defs, this.cube, "</svg>"].join('\n');
+        let svg = [this.root, this.style, this.global, "</svg>"].join('\n');
 
         return svg;
     }
@@ -183,11 +151,17 @@ export default class SvgarCube {
             case "root":
                 this.refreshRoot = true;
                 break;
+            case "style":
+                this.refreshStyle = true;
+                break;
             case "defs":
                 this.refreshDefs = true;
                 break;
-            case "cube":
-                this.refreshCube = true;
+            case "global":
+                this.refreshGlobal = true;
+                break;
+            case "local":
+                this.refreshLocal = true;
                 break;
         }
     }

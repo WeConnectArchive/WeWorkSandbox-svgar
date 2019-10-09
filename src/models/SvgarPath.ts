@@ -12,7 +12,6 @@ export default class SvgarPath {
     }
 
     public segments: number;
-    public refresh: boolean = true;
 
     constructor(coordinates: number[]) {
         this.id = uuid.default();
