@@ -194,12 +194,23 @@ export default class SvgarCube {
 
     // Add a given slab to the svgar cube
     public place(slab: SvgarSlab): void {
-        
+        this.placeAt(slab, 0, 0);
     }
 
     // Add a given slab to the svgar cube with a custom anchor point
-    public placeAt(slab: SvgarSlab, anchor: number[]): void {
+    public placeAt(slab: SvgarSlab, x: number, y: number): void {
+        if(this.slabs.find(x => x.getName() == slab.getName()) == undefined) {
+            this.slabs.push(slab);
+        }
+        
+        let placements = this.placements.find(x => x.slabName == slab.getName());
 
+        if (placements != undefined) {
+            placements.instances.push({x: x, y: y});
+        }
+        else {
+            this.placements.push({slabName: slab.getName(), elevation: slab.getElevation(), instances: [{x: x, y: y}]});
+        }
     }
 
     // Activate any declared event listeners
