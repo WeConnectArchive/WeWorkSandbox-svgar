@@ -36,11 +36,12 @@ export default class SvgarCube {
 
     // Write out current state of svgar data as svg markup
     public compile(width: number, height: number): string {
-        // Compile root
+        
+        // Compile root scope
         if (this.refreshRoot) {
-            let root = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${this.scope.minimum[0]} ${this.scope.maximum[1]} ${this.scope.maximum[0] - this.scope.minimum[0]} ${this.scope.maximum[1] - this.scope.minimum[1]}" width="${width}" height="${height}">\n`
+            this.refreshRoot = false;
+            this.root = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${this.scope.minimum[0]} ${-this.scope.maximum[1]} ${this.scope.maximum[0] - this.scope.minimum[0]} ${this.scope.maximum[1] - this.scope.minimum[1]}" width="${width}" height="${height}">\n`
         }
-        let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${this.scope.minimum[0]} ${-this.scope.maximum[1]} ${this.scope.maximum[0] - this.scope.minimum[0]} ${this.scope.maximum[1] - this.scope.minimum[1]}" width="${width}" height="${height}">\n`;
 
         // Initialize arrays for style and geometry
         let style: string[] = ["\n<style>\n"];
@@ -49,71 +50,80 @@ export default class SvgarCube {
         // Compile slabs
         this.slabs.sort((a, b) => a.getElevation() - b.getElevation()).forEach(slab => {
 
-            // Compile style information
-            let styleCache: string[] = [];
+            // Compile style scope
+            if (this.refreshStyle) {
+                let styleCache: string[] = [];
 
-            slab.getAllStyles().forEach(style => {
-                let s = `#${slab.getName()} > .${style.name} {\n`;
-
-                Object.keys(style.attributes).forEach(att => {
-                    s += `\t${att}: ${style.attributes[att]};\n`
+                slab.getAllStyles().forEach(style => {
+                    let s = `#${slab.getName()} > .${style.name} {\n`;
+    
+                    Object.keys(style.attributes).forEach(att => {
+                        s += `\t${att}: ${style.attributes[att]};\n`
+                    });
+    
+                    styleCache.push(s += '}\n');
                 });
+    
+                style.push(styleCache.join('\n'));
+            }
 
-                styleCache.push(s += '}\n');
-            })
+            // Compile geometry scope (defs, global, local)
+            if (this.refreshGlobal) {
+                let geometryCache: string[] = [`<g id="${slab.getName()}">\n`];
 
-            style.push(styleCache.join('\n'));
-
-            // Compile geometric information
-            let geometryCache: string[] = [`<g id="${slab.getName()}">\n`];
-
-            slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
-                let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`
-
-                const coordinates = geo.getCoordinates();
-
-                let c:number[] = [];
-                
-                for (let i = 0; i < coordinates.length; i += 8) {
-
-                    for (let j = 0; j < 8; j++) {
-                        //let isY: boolean = j % 2 == 1;
-                        //let size: number = isY ? height : width;
-                        c.push(coordinates[i + j])
+                slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
+                    let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`
+    
+                    const coordinates = geo.getCoordinates();
+    
+                    let c:number[] = [];
+                    
+                    for (let i = 0; i < coordinates.length; i += 8) {
+    
+                        for (let j = 0; j < 8; j++) {
+                            //let isY: boolean = j % 2 == 1;
+                            //let size: number = isY ? height : width;
+                            c.push(coordinates[i + j])
+                        }
+    
+                        if (i == 0) {
+                            g += `M ${c[i]} ${-c[i + 1]} `
+                        }
+    
+                        g += `C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]}`
                     }
-
-                    if (i == 0) {
-                        g += `M ${c[i]} ${-c[i + 1]} `
+    
+                    if (geo.isClosed()) {
+                        g += " Z";
                     }
-
-                    g += `C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]}`
-                }
-
-                if (geo.isClosed()) {
-                    g += " Z";
-                }
-
-                g += `" />`;
-
-                geometryCache.push(g)
-            });
-
-            geometryCache.push("\n</g>");
-
-            geometry.push(geometryCache.join('\n'));
+    
+                    g += `" />`;
+    
+                    geometryCache.push(g)
+                });
+    
+                geometryCache.push("\n</g>");
+    
+                geometry.push(geometryCache.join('\n'));
+            }
 
         });
 
         style.push("</style>\n");
 
         // Commit information from slabs to svg string
-        svg += style.join('\n');
-        svg += '\n';
-        svg += geometry.join('\n');
-        svg += '\n';
+        if (this.refreshStyle) {
+            this.refreshStyle = false;
+            this.style = style.join('\n');
+        }
+        
+        if (this.refreshGlobal) {
+            this.refreshGlobal = false;
+            this.global = geometry.join('\n');
+        }
 
         // Finish compilation
-        svg += "\n</svg>"
+        let svg = [this.root, this.style, this.global, "</svg>"].join('\n');
 
         return svg;
     }
