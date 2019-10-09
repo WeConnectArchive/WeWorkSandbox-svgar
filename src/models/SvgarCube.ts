@@ -1,13 +1,30 @@
 import SvgarSlab from './SvgarSlab';
 import Locate from './../predicates/Locate';
 
+type SvgarScope = "root" | "style" | "defs" | "global" | "local";
+
 export default class SvgarCube {
 
+    // Current svgar data
     public slabs: SvgarSlab[];
     public scope: {
         minimum: number[],
         maximum: number[],
     };
+
+    // Cached output by scope
+    private root: string = "";
+    private style: string = "";
+    private defs: string = "";
+    private global: string = "";
+    private local: string = "";
+
+    // Refresh flags
+    private refreshRoot: boolean = true;
+    private refreshStyle: boolean = true;
+    private refreshDefs: boolean = true;
+    private refreshGlobal: boolean = true;
+    private refreshLocal: boolean = true;
 
     constructor() {
         this.slabs = [];
@@ -19,8 +36,11 @@ export default class SvgarCube {
 
     // Write out current state of svgar data as svg markup
     public compile(width: number, height: number): string {
-        // Begin compilation
-        let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 ${width} ${height}" width="${width}" height="${height}" version="1.1">\n`
+        // Compile root
+        if (this.refreshRoot) {
+            let root = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${this.scope.minimum[0]} ${this.scope.maximum[1]} ${this.scope.maximum[0] - this.scope.minimum[0]} ${this.scope.maximum[1] - this.scope.minimum[1]}" width="${width}" height="${height}">\n`
+        }
+        let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${this.scope.minimum[0]} ${-this.scope.maximum[1]} ${this.scope.maximum[0] - this.scope.minimum[0]} ${this.scope.maximum[1] - this.scope.minimum[1]}" width="${width}" height="${height}">\n`;
 
         // Initialize arrays for style and geometry
         let style: string[] = ["\n<style>\n"];
@@ -57,20 +77,20 @@ export default class SvgarCube {
                 for (let i = 0; i < coordinates.length; i += 8) {
 
                     for (let j = 0; j < 8; j++) {
-                        let isY: boolean = j % 2 == 1;
-                        let size: number = isY ? height : width;
-                        c.push(this.aggregateTransform(coordinates[i + j], size, isY))
+                        //let isY: boolean = j % 2 == 1;
+                        //let size: number = isY ? height : width;
+                        c.push(coordinates[i + j])
                     }
 
                     if (i == 0) {
-                        g += `M ${c[i]} ${c[i + 1]} `
+                        g += `M ${c[i]} ${-c[i + 1]} `
                     }
 
-                    g += `C ${c[i + 2]} ${c[i + 3]} ${c[i + 4]} ${c[i + 5]} ${c[i + 6]} ${c[i + 7]} `
+                    g += `C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]}`
                 }
 
                 if (geo.isClosed()) {
-                    g += "Z";
+                    g += " Z";
                 }
 
                 g += `" />`;
@@ -113,6 +133,27 @@ export default class SvgarCube {
 
         this.scope.minimum = [anchor[0] - (xDomain / 2), anchor[1] - (yDomain / 2)];
         this.scope.maximum = [anchor[0] + (xDomain / 2), anchor[1] + (yDomain / 2)];
+    }
+
+    // Flag a cache scope to be recomputed on next compile
+    public flag(scope: SvgarScope): void {
+        switch(scope) {
+            case "root":
+                this.refreshRoot = true;
+                break;
+            case "style":
+                this.refreshStyle = true;
+                break;
+            case "defs":
+                this.refreshDefs = true;
+                break;
+            case "global":
+                this.refreshGlobal = true;
+                break;
+            case "local":
+                this.refreshLocal = true;
+                break;
+        }
     }
 
     // Add a given slab to the svgar cube
