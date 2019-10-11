@@ -25,6 +25,8 @@ export default class SvgarSlab {
     private states: SvgarState[];
     private styles: SvgarStyle[];
 
+    private clip: SvgarPath | undefined;
+
     private anchor: number[];
     private geometry: SvgarPath[];
 
@@ -153,6 +155,14 @@ export default class SvgarSlab {
         clone.setAllGeometry(this.geometry);
 
         return clone;
+    }
+
+    public clipWith(path: SvgarPath): void {
+        this.clip = path;
+    }
+
+    public getClip(): SvgarPath | undefined {
+        return this.clip;
     }
 
     // Given a tag, return its style in the active state

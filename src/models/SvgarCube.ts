@@ -15,7 +15,7 @@ export default class SvgarCube {
     // Cached output by scope
     private root: string = "";
     private style: string = "";
-    private defs: string = "";
+    private clips: string = "";
     private global: string = "";
     private local: string = "";
 
@@ -45,6 +45,7 @@ export default class SvgarCube {
 
         // Initialize arrays for style and geometry
         let style: string[] = ["\n<style>\n"];
+        let clips: string[] = [];
         let geometry: string[] = [];
 
         // Compile slabs
@@ -67,9 +68,40 @@ export default class SvgarCube {
                 style.push(styleCache.join('\n'));
             }
 
+            // Compile clip paths, if they exist
+            if (slab.getClip() != undefined) {
+                let clip: string[] = [`<clipPath id="${slab.getId()}">`];
+
+                slab.getAllGeometry().forEach(geo => {
+
+                    let c = `<path d="`;
+
+                    let pts = geo.getCoordinates();
+
+                    for (let i = 0; i < pts.length; i+=8) {
+
+                        if (i == 0) {
+                            c += `M ${pts[i]} ${pts[i + 1]} `;
+                        }
+
+                        c += `C ${pts[i + 2]} -${pts[i + 3]} ${pts[i + 4]} -${pts[i + 5]} ${pts[i + 6]} -${pts[i + 7]}`
+                    }
+
+                    c += geo.isClosed() ? ' Z" />' : '" />';
+
+                    clip.push(c);
+                });
+
+                clip.push("</clipPath>");
+
+                clips.push(clip.join("\n"));
+            }
+
             // Compile geometry scope (defs, global, local)
             if (this.refreshGlobal) {
-                let geometryCache: string[] = [`<g id="${slab.getName()}">\n`];
+                let geometryCache: string[] = slab.getClip() == undefined 
+                    ? [`<g id="${slab.getName()}">\n`]
+                    : [`<g id="${slab.getName()}" clip-path="url(#${slab.getClip()?.getId()})">\n`];
 
                 slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
                     let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`
@@ -116,6 +148,8 @@ export default class SvgarCube {
             this.refreshStyle = false;
             this.style = style.join('\n');
         }
+
+        this.clips = clips.join('\n');
         
         if (this.refreshGlobal) {
             this.refreshGlobal = false;
@@ -123,7 +157,7 @@ export default class SvgarCube {
         }
 
         // Finish compilation
-        let svg = [this.root, this.style, this.global, "</svg>"].join('\n');
+        let svg = [this.root, this.style, this.clips, this.global, "</svg>"].join('\n');
 
         return svg;
     }
