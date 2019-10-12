@@ -25,7 +25,7 @@ export default class SvgarSlab {
     private states: SvgarState[];
     private styles: SvgarStyle[];
 
-    private clip: SvgarPath | undefined;
+    private clip: SvgarPath[] | undefined;
 
     private anchor: number[];
     private geometry: SvgarPath[];
@@ -157,11 +157,16 @@ export default class SvgarSlab {
         return clone;
     }
 
-    public clipWith(path: SvgarPath): void {
-        this.clip = path;
+    public clipWith(path: SvgarPath[] | SvgarPath): void {
+        if (path instanceof SvgarPath) {
+            this.clip = [path];
+        }
+        else {
+            this.clip = path;
+        }
     }
 
-    public getClip(): SvgarPath | undefined {
+    public getClip(): SvgarPath[] | undefined {
         return this.clip;
     }
 

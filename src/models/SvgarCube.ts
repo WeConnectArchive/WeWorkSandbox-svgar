@@ -70,9 +70,9 @@ export default class SvgarCube {
 
             // Compile clip paths, if they exist
             if (slab.getClip() != undefined) {
-                let clip: string[] = [`<clipPath id="${slab.getId()}">`];
+                let clip: string[] = [`<clipPath id="${slab.getClip()?.[0].getId()}">`];
 
-                slab.getAllGeometry().forEach(geo => {
+                slab.getClip()?.forEach(geo => {
 
                     let c = `<path d="`;
 
@@ -81,10 +81,10 @@ export default class SvgarCube {
                     for (let i = 0; i < pts.length; i+=8) {
 
                         if (i == 0) {
-                            c += `M ${pts[i]} ${pts[i + 1]} `;
+                            c += `M ${pts[i]} ${-pts[i + 1]} `;
                         }
 
-                        c += `C ${pts[i + 2]} -${pts[i + 3]} ${pts[i + 4]} -${pts[i + 5]} ${pts[i + 6]} -${pts[i + 7]}`
+                        c += `C ${pts[i + 2]} ${-pts[i + 3]} ${pts[i + 4]} ${-pts[i + 5]} ${pts[i + 6]} ${-pts[i + 7]} `
                     }
 
                     c += geo.isClosed() ? ' Z" />' : '" />';
@@ -101,7 +101,7 @@ export default class SvgarCube {
             if (this.refreshGlobal) {
                 let geometryCache: string[] = slab.getClip() == undefined 
                     ? [`<g id="${slab.getName()}">\n`]
-                    : [`<g id="${slab.getName()}" clip-path="url(#${slab.getClip()?.getId()})">\n`];
+                    : [`<g id="${slab.getName()}" clip-path="url(#${slab.getClip()?.[0].getId()})">\n`];
 
                 slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
                     let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`
@@ -122,7 +122,7 @@ export default class SvgarCube {
                             g += `M ${c[i]} ${-c[i + 1]} `
                         }
     
-                        g += `C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]}`
+                        g += `C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]} `
                     }
     
                     if (geo.isClosed()) {
