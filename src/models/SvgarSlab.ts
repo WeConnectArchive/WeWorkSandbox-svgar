@@ -187,6 +187,23 @@ export default class SvgarSlab {
         }
     }
 
+    public changedScope(scope: SvgarSlabFlag): boolean {
+        switch(scope) {
+            case "style":
+                return this.changed.style;
+            case "state":
+                return this.changed.state;
+            case "geometry":
+                return this.changed.geometry;
+            case "clipPath":
+                return this.changed.clipPath;
+            case "mask":
+                return this.changed.mask;
+            default:
+                return false;
+        }
+    }
+
     public changedAny(): boolean {
         return this.changed.style || this.changed.state || this.changed.geometry || this.changed.mask || this.changed.clipPath;
     }
