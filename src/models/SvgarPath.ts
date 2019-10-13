@@ -8,6 +8,8 @@ interface SvgarPathChanged {
     geometry: boolean;
 }
 
+type SvgarCubeFlag = "geometry";
+
 export default class SvgarPath {
 
     private id: string;
@@ -65,6 +67,14 @@ export default class SvgarPath {
         d += this.isClosed() ? ' Z"' : '"';
 
         this.cache.d = d;
+    }
+
+    public flag(scope: SvgarCubeFlag): void {
+        switch(scope) {
+            case "geometry":
+                this.changed.geometry = true;
+                break;
+        }
     }
 
     public changedAny(): boolean {

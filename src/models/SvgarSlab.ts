@@ -32,6 +32,8 @@ interface SvgarSlabChanged {
     mask: boolean,
 }
 
+type SvgarSlabFlag = "style" | "state" | "geometry" | "clipPath" | "mask";
+
 export default class SvgarSlab {
 
     // Current svgar data
@@ -162,6 +164,26 @@ export default class SvgarSlab {
         // Compile mask information, if it exists
         if(this.changed.mask) {
             this.changed.mask = false;
+        }
+    }
+
+    public flag(scope: SvgarSlabFlag): void {
+        switch(scope) {
+            case "style":
+                this.changed.style = true;
+                break;
+            case "state":
+                this.changed.state = true;
+                break;
+            case "geometry":
+                this.changed.geometry = true;
+                break;
+            case "clipPath":
+                this.changed.clipPath = true;
+                break;
+            case "mask":
+                this.changed.mask = true;
+                break;
         }
     }
 
