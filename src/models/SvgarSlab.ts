@@ -15,18 +15,61 @@ interface SvgarStyle {
     }
 }
 
+interface SvgarSlabCache {
+    style: string,
+    geometry: string,
+    clipPathStyle: string,
+    clipPathGeometry: string,
+    maskStyle: string,
+    maskGeometry: string,
+}
+
+interface SvgarSlabChanged {
+    style: boolean,
+    state: boolean,
+    geometry: boolean,
+    clipPath: boolean,
+    mask: boolean,
+}
+
+type SvgarSlabFlag = "style" | "state" | "geometry" | "clipPath" | "mask";
+
 export default class SvgarSlab {
 
+    // Current svgar data
     private name: string;
     private id: string;
     private elevation: number;
 
     private state: string;
     private states: SvgarState[];
+    private localStyle: SvgarStyle | undefined;
     private styles: SvgarStyle[];
+
+    private clip: SvgarSlab | undefined;
+    private mask: SvgarSlab | undefined;
 
     private anchor: number[];
     private geometry: SvgarPath[];
+
+    // Current svgar cache
+    public cache: SvgarSlabCache = {
+        style: "",
+        geometry: "",
+        clipPathStyle: "",
+        clipPathGeometry: "",
+        maskStyle: "",
+        maskGeometry: "",
+    }
+
+    // Cache update flags
+    private changed: SvgarSlabChanged = {
+        style: true,
+        state: true,
+        geometry: true,
+        clipPath: true,
+        mask: true,
+    }
 
     constructor(name: string) {
         this.name = name;
@@ -52,6 +95,100 @@ export default class SvgarSlab {
 
         this.anchor = [0, 0];
         this.geometry = [];
+    }
+
+    public compile(): void {
+        // Compile current style information
+        if(this.changed.style) {
+            this.changed.style = false;
+
+            let styles: string[] = [];
+
+            if(this.localStyle != undefined) {
+                let s = `#${this.name} > * {\n`;
+
+                Object.keys(this.localStyle.attributes).forEach(att => {
+                    s += `\t${att}: ${this.localStyle?.attributes[att]};\n`;
+                });
+
+                styles.push(s += '}\n');
+            }
+
+            this.styles.forEach(style => {
+                let s = `#${this.name} > .${style.name} {\n`;
+
+                Object.keys(style.attributes).forEach(att => {
+                    s += `\t${att}: ${style.attributes[att]};\n`
+                });
+
+                styles.push(s += '}\n');
+            });
+
+            this.cache.style = styles.join('\n');
+        }
+
+        // Compile stateful geometric information
+        if(this.changed.state || this.changed.geometry) {
+            this.changed.state = false;
+            this.changed.geometry = false;
+
+            let paths: string[] = [];
+
+            this.geometry.sort((a, b) => a.getElevation() - b.getElevation()).forEach(path => {
+                path.compile();
+                paths.push(`<path vector-effect="non-scaling-stroke" id="${path.getId()}" class="${this.mapTagToStyle(path.getTag())}" ${path.cache.d} />`);
+            });
+
+            this.cache.geometry = paths.join("\n");
+        }
+
+        // Compile clip path information, if it exists
+        if(this.changed.clipPath) {
+            this.changed.clipPath = false;
+
+            if(this.clip != undefined)
+            {
+                this.clip.compile();
+
+                let clip: string[] = [
+                    `<clipPath id="${this.clip?.getId()}" >`,
+                    this.clip.cache.geometry,
+                    `</clipPath>`]
+                    ; 
+                
+                this.cache.clipPathGeometry = clip.join("\n");
+                this.cache.clipPathStyle = this.clip.cache.style;
+            }
+        }
+
+        // Compile mask information, if it exists
+        if(this.changed.mask) {
+            this.changed.mask = false;
+        }
+    }
+
+    public flag(scope: SvgarSlabFlag): void {
+        switch(scope) {
+            case "style":
+                this.changed.style = true;
+                break;
+            case "state":
+                this.changed.state = true;
+                break;
+            case "geometry":
+                this.changed.geometry = true;
+                break;
+            case "clipPath":
+                this.changed.clipPath = true;
+                break;
+            case "mask":
+                this.changed.mask = true;
+                break;
+        }
+    }
+
+    public changedAny(): boolean {
+        return this.changed.style || this.changed.state || this.changed.geometry || this.changed.mask || this.changed.clipPath;
     }
 
     public getId(): string {
@@ -121,6 +258,10 @@ export default class SvgarSlab {
         this.styles.push(style);
     }
 
+    public setLocalStyle(style: SvgarStyle): void {
+        this.localStyle = style;
+    }
+
     public getAnchor(): number[] {
         return this.anchor;
     }
@@ -153,6 +294,14 @@ export default class SvgarSlab {
         clone.setAllGeometry(this.geometry);
 
         return clone;
+    }
+
+    public clipWith(slab: SvgarSlab): void {
+        this.clip = slab;
+    }
+
+    public getClip(): SvgarSlab | undefined {
+        return this.clip;
     }
 
     // Given a tag, return its style in the active state

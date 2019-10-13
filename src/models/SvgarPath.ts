@@ -1,5 +1,15 @@
 import * as uuid from 'uuid/v4';
 
+interface SvgarPathCache {
+    d: string,
+}
+
+interface SvgarPathChanged {
+    geometry: boolean;
+}
+
+type SvgarCubeFlag = "geometry";
+
 export default class SvgarPath {
 
     private id: string;
@@ -9,6 +19,16 @@ export default class SvgarPath {
 
     private events: {
         [event: string]: (arg: any) => void,
+    }
+
+    // Current cache
+    public cache: SvgarPathCache = {
+        d: "",
+    }
+
+    // Cache update flags
+    public changed: SvgarPathChanged = {
+        geometry: true,
     }
 
     public segments: number;
@@ -22,6 +42,43 @@ export default class SvgarPath {
         this.segments = this.coordinates.length / 8;
 
         this.events = {};
+    }
+
+    public compile(): void {
+        if(!this.changed.geometry) {
+            return;
+        }
+
+        this.changed.geometry = false;
+
+        const c = this.coordinates;
+        let d = 'd="'
+
+        for (let i = 0; i < c.length; i+=8) {
+            
+            if (i == 0) {
+                d += `M ${c[i]} ${-c[i + 1]}`
+            }
+
+            d += ` C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]}`
+
+        }
+
+        d += this.isClosed() ? ' Z"' : '"';
+
+        this.cache.d = d;
+    }
+
+    public flag(scope: SvgarCubeFlag): void {
+        switch(scope) {
+            case "geometry":
+                this.changed.geometry = true;
+                break;
+        }
+    }
+
+    public changedAny(): boolean {
+        return this.changed.geometry;
     }
 
     public attach(event: string, fct: (arg: any) => void): void {

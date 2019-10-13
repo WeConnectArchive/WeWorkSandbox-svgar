@@ -1,6 +1,6 @@
 {
   "name": "svgar",
-  "version": "0.3.5",
+  "version": "0.3.25",
   "description": "svg, but a little sweeter",
   "main": "dist/index.js",
   "module": "commonjs",
@@ -29,7 +29,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WeConnect/svgar.git"
+    "url": "git+https://github.com/WeWorkSandbox/svgar.git"
   },
   "keywords": [
     "svg"

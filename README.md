@@ -17,7 +17,7 @@ Svgar cubes (read: drawings) contain a camera object and a collection 'stateful'
 
 Anything svg can do, svgar can do! But now the drawing process is a little bit sweeter.
 
-**(Under active development. Targeting November for a feature-complete `0.3.X`.)**
+**(Under active development. Targeting November for a complete `0.4.X` fluent syntax.)**
 
 ## Installation
 
