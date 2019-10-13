@@ -105,40 +105,11 @@ export default class SvgarCube {
                 style.push(styleCache.join('\n'));
             }
 
-            // Compile clip paths, if they exist
-            if (slab.getClip() != undefined) {
-                let clip: string[] = [`<clipPath id="${slab.getClip()?.[0].getId()}">`];
-
-                slab.getClip()?.forEach(geo => {
-
-                    let c = `<path vector-effect="non-scaling-stroke" d="`;
-
-                    let pts = geo.getCoordinates();
-
-                    for (let i = 0; i < pts.length; i+=8) {
-
-                        if (i == 0) {
-                            c += `M ${pts[i]} ${-pts[i + 1]}`;
-                        }
-
-                        c += ` C ${pts[i + 2]} ${-pts[i + 3]} ${pts[i + 4]} ${-pts[i + 5]} ${pts[i + 6]} ${-pts[i + 7]}`
-                    }
-
-                    c += geo.isClosed() ? ' Z" />' : '" />';
-
-                    clip.push(c);
-                });
-
-                clip.push("</clipPath>");
-
-                clips.push(clip.join("\n"));
-            }
-
             // Compile geometry scope (defs, global, local)
             if (this.refreshGlobal) {
                 let geometryCache: string[] = slab.getClip() == undefined 
                     ? [`<g id="${slab.getName()}">\n`]
-                    : [`<g id="${slab.getName()}" clip-path="url(#${slab.getClip()?.[0].getId()})">\n`];
+                    : [`<g id="${slab.getName()}" clip-path="url(#${slab.getClip()?.getId()})">\n`];
 
                 slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
                     let g = `<path vector-effect="non-scaling-stroke" class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`

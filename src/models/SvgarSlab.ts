@@ -26,6 +26,7 @@ interface SvgarSlabCache {
 
 interface SvgarSlabChanged {
     style: boolean,
+    state: boolean,
     geometry: boolean,
     clipPath: boolean,
     mask: boolean,
@@ -40,9 +41,11 @@ export default class SvgarSlab {
 
     private state: string;
     private states: SvgarState[];
+    private localStyle: SvgarStyle | undefined;
     private styles: SvgarStyle[];
 
-    private clip: SvgarPath[] | undefined;
+    private clip: SvgarSlab | undefined;
+    private mask: SvgarSlab | undefined;
 
     private anchor: number[];
     private geometry: SvgarPath[];
@@ -60,6 +63,7 @@ export default class SvgarSlab {
     // Cache update flags
     private changed: SvgarSlabChanged = {
         style: true,
+        state: true,
         geometry: true,
         clipPath: true,
         mask: true,
@@ -92,7 +96,77 @@ export default class SvgarSlab {
     }
 
     public compile(): void {
-        
+        // Compile current style information
+        if(this.changed.style) {
+            this.changed.style = false;
+
+            let styles: string[] = [];
+
+            if(this.localStyle != undefined) {
+                let s = `#${this.name} > * {\n`;
+
+                Object.keys(this.localStyle.attributes).forEach(att => {
+                    s += `\t${att}: ${this.localStyle?.attributes[att]};\n`;
+                });
+
+                styles.push(s += '}\n');
+            }
+
+            this.styles.forEach(style => {
+                let s = `#${this.name} > .${style.name} {\n`;
+
+                Object.keys(style.attributes).forEach(att => {
+                    s += `\t${att}: ${style.attributes[att]};\n`
+                });
+
+                styles.push(s += '}\n');
+            });
+
+            this.cache.style = styles.join('\n');
+        }
+
+        // Compile stateful geometric information
+        if(this.changed.state || this.changed.geometry) {
+            this.changed.state = false;
+            this.changed.geometry = false;
+
+            let paths: string[] = [];
+
+            this.geometry.sort((a, b) => a.getElevation() - b.getElevation()).forEach(path => {
+                path.compile();
+                paths.push(`<path vector-effect="non-scaling-stroke" class="${this.mapTagToStyle(path.getTag())}" ${path.cache.d} />`);
+            });
+
+            this.cache.geometry = paths.join("\n");
+        }
+
+        // Compile clip path information, if it exists
+        if(this.changed.clipPath) {
+            this.changed.clipPath = false;
+
+            if(this.clip != undefined)
+            {
+                this.clip.compile();
+
+                let clip: string[] = [
+                    `<clipPath id="${this.clip?.getId()}" >`,
+                    this.clip.cache.geometry,
+                    `</clipPath>`]
+                    ; 
+                
+                this.cache.clipPathGeometry = clip.join("\n");
+                this.cache.clipPathStyle = this.clip.cache.style;
+            }
+        }
+
+        // Compile mask information, if it exists
+        if(this.changed.mask) {
+            this.changed.mask = false;
+        }
+    }
+
+    public changedAny(): boolean {
+        return this.changed.style || this.changed.state || this.changed.geometry || this.changed.mask || this.changed.clipPath;
     }
 
     public getId(): string {
@@ -162,6 +236,10 @@ export default class SvgarSlab {
         this.styles.push(style);
     }
 
+    public setLocalStyle(style: SvgarStyle): void {
+        this.localStyle = style;
+    }
+
     public getAnchor(): number[] {
         return this.anchor;
     }
@@ -196,16 +274,11 @@ export default class SvgarSlab {
         return clone;
     }
 
-    public clipWith(path: SvgarPath[] | SvgarPath): void {
-        if (path instanceof SvgarPath) {
-            this.clip = [path];
-        }
-        else {
-            this.clip = path;
-        }
+    public clipWith(slab: SvgarSlab): void {
+        this.clip = slab;
     }
 
-    public getClip(): SvgarPath[] | undefined {
+    public getClip(): SvgarSlab | undefined {
         return this.clip;
     }
 
