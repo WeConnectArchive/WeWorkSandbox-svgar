@@ -74,17 +74,17 @@ export default class SvgarCube {
 
                 slab.getClip()?.forEach(geo => {
 
-                    let c = `<path d="`;
+                    let c = `<path vector-effect="non-scaling-stroke" d="`;
 
                     let pts = geo.getCoordinates();
 
                     for (let i = 0; i < pts.length; i+=8) {
 
                         if (i == 0) {
-                            c += `M ${pts[i]} ${-pts[i + 1]} `;
+                            c += `M ${pts[i]} ${-pts[i + 1]}`;
                         }
 
-                        c += `C ${pts[i + 2]} ${-pts[i + 3]} ${pts[i + 4]} ${-pts[i + 5]} ${pts[i + 6]} ${-pts[i + 7]} `
+                        c += ` C ${pts[i + 2]} ${-pts[i + 3]} ${pts[i + 4]} ${-pts[i + 5]} ${pts[i + 6]} ${-pts[i + 7]}`
                     }
 
                     c += geo.isClosed() ? ' Z" />' : '" />';
@@ -104,7 +104,7 @@ export default class SvgarCube {
                     : [`<g id="${slab.getName()}" clip-path="url(#${slab.getClip()?.[0].getId()})">\n`];
 
                 slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
-                    let g = `<path class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`
+                    let g = `<path vector-effect="non-scaling-stroke" class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`
     
                     const coordinates = geo.getCoordinates();
     
@@ -119,17 +119,13 @@ export default class SvgarCube {
                         }
     
                         if (i == 0) {
-                            g += `M ${c[i]} ${-c[i + 1]} `
+                            g += `M ${c[i]} ${-c[i + 1]}`
                         }
     
-                        g += `C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]} `
+                        g += ` C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]}`
                     }
-    
-                    if (geo.isClosed()) {
-                        g += " Z";
-                    }
-    
-                    g += `" />`;
+
+                    g += geo.isClosed() ? ' Z" />' : '" />';
     
                     geometryCache.push(g)
                 });
