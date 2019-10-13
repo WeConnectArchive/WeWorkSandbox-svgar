@@ -134,7 +134,7 @@ export default class SvgarSlab {
 
             this.geometry.sort((a, b) => a.getElevation() - b.getElevation()).forEach(path => {
                 path.compile();
-                paths.push(`<path vector-effect="non-scaling-stroke" class="${this.mapTagToStyle(path.getTag())}" ${path.cache.d} />`);
+                paths.push(`<path vector-effect="non-scaling-stroke" id="${path.getId()}" class="${this.mapTagToStyle(path.getTag())}" ${path.cache.d} />`);
             });
 
             this.cache.geometry = paths.join("\n");

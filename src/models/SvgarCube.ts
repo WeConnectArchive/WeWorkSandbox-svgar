@@ -1,8 +1,6 @@
 import SvgarSlab from './SvgarSlab';
 import Locate from './../predicates/Locate';
 
-type SvgarScope = "root" | "style" | "defs" | "global" | "local";
-
 interface SvgarCubeCache {
     root: string,
     styles: string,
@@ -14,12 +12,10 @@ interface SvgarCubeCache {
 
 interface SvgarCubeChanged {
     root: boolean,
-    styles: boolean,
-    clipPaths: boolean,
-    masks: boolean,
     global: boolean,
-    local: boolean
 }
+
+type SvgarCubeFlag = "root" | "global";
 
 export default class SvgarCube {
 
@@ -43,25 +39,8 @@ export default class SvgarCube {
     // Cache update flags
     private changed: SvgarCubeChanged = {
         root: true,
-        styles: true,
-        clipPaths: true,
-        masks: true,
         global: true,
-        local: true
     }
-
-    // Depreciated
-    private root: string = "";
-    private style: string = "";
-    private clips: string = "";
-    private global: string = "";
-    private local: string = "";
-
-    private refreshRoot: boolean = true;
-    private refreshStyle: boolean = true;
-    private refreshDefs: boolean = true;
-    private refreshGlobal: boolean = true;
-    private refreshLocal: boolean = true;
 
     constructor() {
         this.slabs = [];
@@ -75,103 +54,57 @@ export default class SvgarCube {
     public compile(width: number, height: number): string {
         
         // Compile root scope
-        if (this.refreshRoot) {
-            this.refreshRoot = false;
-            this.root = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${this.scope.minimum[0]} ${-this.scope.maximum[1]} ${this.scope.maximum[0] - this.scope.minimum[0]} ${this.scope.maximum[1] - this.scope.minimum[1]}" width="${width}" height="${height}">\n`
+        if (this.changed.root) {
+            this.changed.root = false;
+            this.cache.root = [
+                `<svg xmlns="http://www.w3.org/2000/svg"`, 
+                `viewBox="${this.scope.minimum[0]} ${-this.scope.maximum[1]} ${this.scope.maximum[0] - this.scope.minimum[0]} ${this.scope.maximum[1] - this.scope.minimum[1]}"`,
+                `width="${width}" height="${height}">\n`
+            ].join(" ");
         }
 
-        // Initialize arrays for style and geometry
-        let style: string[] = ["\n<style>\n"];
-        let clips: string[] = [];
+        // Compile slab information
+        let style: string[] = ["<style>\n"];
+        let clipPaths: string[] = [];
+        let masks: string[] = [];
         let geometry: string[] = [];
 
-        // Compile slabs
         this.slabs.sort((a, b) => a.getElevation() - b.getElevation()).forEach(slab => {
+            slab.compile();
 
-            // Compile style scope
-            if (this.refreshStyle) {
-                let styleCache: string[] = [];
+            style.push(slab.cache.style);
+            style.push(slab.cache.clipPathStyle);
+            style.push(slab.cache.maskStyle);
 
-                slab.getAllStyles().forEach(style => {
-                    let s = `#${slab.getName()} > .${style.name} {\n`;
-    
-                    Object.keys(style.attributes).forEach(att => {
-                        s += `\t${att}: ${style.attributes[att]};\n`
-                    });
-    
-                    styleCache.push(s += '}\n');
-                });
-    
-                style.push(styleCache.join('\n'));
-            }
+            clipPaths.push(slab.cache.clipPathGeometry);
+            masks.push(slab.cache.maskGeometry);
 
-            // Compile geometry scope (defs, global, local)
-            if (this.refreshGlobal) {
-                let geometryCache: string[] = slab.getClip() == undefined 
-                    ? [`<g id="${slab.getName()}">\n`]
-                    : [`<g id="${slab.getName()}" clip-path="url(#${slab.getClip()?.getId()})">\n`];
-
-                slab.getAllGeometry().sort((a, b) => a.getElevation() - b.getElevation()).forEach(geo => {
-                    let g = `<path vector-effect="non-scaling-stroke" class="${slab.mapTagToStyle(geo.getTag())}" id="${geo.getId()}" d="`
-    
-                    const coordinates = geo.getCoordinates();
-    
-                    let c:number[] = [];
-                    
-                    for (let i = 0; i < coordinates.length; i += 8) {
-    
-                        for (let j = 0; j < 8; j++) {
-                            //let isY: boolean = j % 2 == 1;
-                            //let size: number = isY ? height : width;
-                            c.push(coordinates[i + j])
-                        }
-    
-                        if (i == 0) {
-                            g += `M ${c[i]} ${-c[i + 1]}`
-                        }
-    
-                        g += ` C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]}`
-                    }
-
-                    g += geo.isClosed() ? ' Z" />' : '" />';
-    
-                    geometryCache.push(g)
-                });
-    
-                geometryCache.push("\n</g>");
-    
-                geometry.push(geometryCache.join('\n'));
-            }
-
+            geometry.push(slab.getClip() == undefined ? `<g id="${slab.getName()}">` : `<g id="${slab.getName()}" clip-path="url(#${slab.getClip()?.getId()})">`);
+            geometry.push(slab.cache.geometry);
+            geometry.push(`</g>`)
         });
 
-        style.push("</style>\n");
+        style.push("</style>");
 
-        // Commit information from slabs to svg string
-        if (this.refreshStyle) {
-            this.refreshStyle = false;
-            this.style = style.join('\n');
+        this.cache.styles = style.join("\n");
+        this.cache.clipPaths = clipPaths.join("\n");
+        this.cache.masks = masks.join("\n");
+        this.cache.local = geometry.join("\n");
+
+        // Compile global scope
+        if(this.changed.global) {
+            this.changed.global = false;
         }
 
-        this.clips = clips.join('\n');
-        
-        if (this.refreshGlobal) {
-            this.refreshGlobal = false;
-            this.global = geometry.join('\n');
-        }
-
-        // Finish compilation
-        let svg = [this.root, this.style, this.clips, this.global, "</svg>"].join('\n');
-
-        return svg;
-    }
-
-    private aggregateTransform(value: number, size: number, isY: boolean): number {
-        const normalized = (value - this.scope.minimum[+isY]) / (this.scope.maximum[+isY] - this.scope.minimum[+isY])
-        const inverted = isY ? 1 - normalized : normalized;
-        const final = inverted * size;
-        
-        return final;
+        // Compose all cached information into svg markup
+        return [
+            this.cache.root,
+            this.cache.styles,
+            this.cache.clipPaths,
+            this.cache.masks,
+            this.cache.local,
+            "</svg>"
+        ].join("\n");
     }
 
     // Change current camera position based on a center point and rectangular extents
@@ -183,27 +116,6 @@ export default class SvgarCube {
         this.scope.maximum = [anchor[0] + (xDomain / 2), anchor[1] + (yDomain / 2)];
     }
 
-    // Flag a cache scope to be recomputed on next compile
-    public flag(scope: SvgarScope): void {
-        switch(scope) {
-            case "root":
-                this.refreshRoot = true;
-                break;
-            case "style":
-                this.refreshStyle = true;
-                break;
-            case "defs":
-                this.refreshDefs = true;
-                break;
-            case "global":
-                this.refreshGlobal = true;
-                break;
-            case "local":
-                this.refreshLocal = true;
-                break;
-        }
-    }
-
     // Add a given slab to the svgar cube
     public place(slab: SvgarSlab): void {
         
@@ -212,6 +124,17 @@ export default class SvgarCube {
     // Add a given slab to the svgar cube with a custom anchor point
     public placeAt(slab: SvgarSlab, anchor: number[]): void {
 
+    }
+
+    public flag(scope: SvgarCubeFlag): void {
+        switch(scope) {
+            case "global":
+                this.changed.global = true;
+                break;
+            case "root":
+                this.changed.root = true;
+                break;
+        }
     }
 
     // Activate any declared event listeners
