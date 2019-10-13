@@ -140,7 +140,11 @@ export default class SvgarCube {
     // Activate any declared event listeners
     public listen(): void {
         document.querySelectorAll("path").forEach(x => {
+            console.log(x.id);
+            
             const path = Locate().svgar.path.withId(x.id).in.svgar.cube(this);
+
+            console.log(path);
 
             const events = path?.getAllEvents();
 
@@ -149,7 +153,8 @@ export default class SvgarCube {
             }
 
             Object.keys(events).forEach(e => {
-                document.addEventListener(e, events[e])
+                console.log(e);
+                x.addEventListener(e, events[e])
             });
         })
     }

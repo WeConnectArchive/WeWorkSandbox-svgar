@@ -49,7 +49,7 @@ class LocateSvgarSlabContext {
         let slabs: SvgarSlab[] = [];
         
         if (this.withIdFilter != "") {
-            slabs = slabs.concat(cube.slabs.filter(x => x.getId() == this.withIdFilter));
+            slabs = cube.slabs.filter(x => x.getId() == this.withIdFilter);
         }
 
         if (this.withNameFilter != "") {
@@ -79,6 +79,8 @@ class LocateSvgarPathContext {
                 slab: this.locateInSvgarSlab.bind(this),
             }
         }
+
+        this.withIdFilter = "";
     }
 
     public withId(name: string): LocateSvgarPathContext {
@@ -101,7 +103,7 @@ class LocateSvgarPathContext {
             paths = paths.concat(paths.filter(x => x.getId() == this.withIdFilter));
         }
 
-        return paths[0];
+        return paths.find(x => x.getId() == this.withIdFilter);
     }
 
     private locateInSvgarSlab(slab: SvgarSlab): SvgarPath | undefined {
