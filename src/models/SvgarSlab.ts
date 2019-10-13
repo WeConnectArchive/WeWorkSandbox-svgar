@@ -15,8 +15,25 @@ interface SvgarStyle {
     }
 }
 
+interface SvgarSlabCache {
+    style: string,
+    geometry: string,
+    clipPathStyle: string,
+    clipPathGeometry: string,
+    maskStyle: string,
+    maskGeometry: string,
+}
+
+interface SvgarSlabChanged {
+    style: boolean,
+    geometry: boolean,
+    clipPath: boolean,
+    mask: boolean,
+}
+
 export default class SvgarSlab {
 
+    // Current svgar data
     private name: string;
     private id: string;
     private elevation: number;
@@ -29,6 +46,24 @@ export default class SvgarSlab {
 
     private anchor: number[];
     private geometry: SvgarPath[];
+
+    // Current svgar cache
+    public cache: SvgarSlabCache = {
+        style: "",
+        geometry: "",
+        clipPathStyle: "",
+        clipPathGeometry: "",
+        maskStyle: "",
+        maskGeometry: "",
+    }
+
+    // Cache update flags
+    private changed: SvgarSlabChanged = {
+        style: true,
+        geometry: true,
+        clipPath: true,
+        mask: true,
+    }
 
     constructor(name: string) {
         this.name = name;
@@ -54,6 +89,10 @@ export default class SvgarSlab {
 
         this.anchor = [0, 0];
         this.geometry = [];
+    }
+
+    public compile(): void {
+        
     }
 
     public getId(): string {

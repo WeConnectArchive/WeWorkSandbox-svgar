@@ -3,6 +3,24 @@ import Locate from './../predicates/Locate';
 
 type SvgarScope = "root" | "style" | "defs" | "global" | "local";
 
+interface SvgarCubeCache {
+    root: string,
+    styles: string,
+    clipPaths: string,
+    masks: string,
+    global: string,
+    local: string,
+}
+
+interface SvgarCubeChanged {
+    root: boolean,
+    styles: boolean,
+    clipPaths: boolean,
+    masks: boolean,
+    global: boolean,
+    local: boolean
+}
+
 export default class SvgarCube {
 
     // Current svgar data
@@ -12,14 +30,33 @@ export default class SvgarCube {
         maximum: number[],
     };
 
-    // Cached output by scope
+    // Current svgar cache
+    private cache: SvgarCubeCache = {
+        root: "",
+        styles: "",
+        clipPaths: "",
+        masks: "",
+        global: "",
+        local: ""
+    }
+
+    // Cache update flags
+    private changed: SvgarCubeChanged = {
+        root: true,
+        styles: true,
+        clipPaths: true,
+        masks: true,
+        global: true,
+        local: true
+    }
+
+    // Depreciated
     private root: string = "";
     private style: string = "";
     private clips: string = "";
     private global: string = "";
     private local: string = "";
 
-    // Refresh flags
     private refreshRoot: boolean = true;
     private refreshStyle: boolean = true;
     private refreshDefs: boolean = true;
