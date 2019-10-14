@@ -30,6 +30,13 @@ class UpdateSvgarCubeContext {
 
     private cube: SvgarCube;
 
+    public camera: {
+        extentTo: (xMin: number, yMin: number, xMax: number, yMax: number) => UpdateSvgarCubeContext,
+        anchorTo: (x: number, y: number) => UpdateSvgarCubeContext,
+        withZoom: (amount: number) => UpdateSvgarCubeContext,
+        withPan: (xPan: number, yPan: number) => UpdateSvgarCubeContext,
+    };
+
     constructor(cube: SvgarCube) {
         this.cube = cube;
     }

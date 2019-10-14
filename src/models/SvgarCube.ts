@@ -139,6 +139,15 @@ export default class SvgarCube {
         }
     }
 
+    public checkFlag(scope: SvgarCubeFlag): boolean {
+        switch(scope) {
+            case "global":
+                return this.changed.global;
+            case "root":
+                return this.changed.root;
+        }
+    }
+
     // Activate any declared event listeners
     public listen(): void {
         document.querySelectorAll("path").forEach(x => {
