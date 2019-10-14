@@ -135,7 +135,7 @@ export default class SvgarSlab {
             let paths: string[] = [];
 
             this.geometry.sort((a, b) => a.getElevation() - b.getElevation()).forEach(path => {
-                path.compile();
+                path.compile(this.anchor[0], this.anchor[1]);
                 paths.push(`<path vector-effect="non-scaling-stroke" id="${path.getId()}" class="${this.mapTagToStyle(path.getTag())}" ${path.cache.d} />`);
             });
 

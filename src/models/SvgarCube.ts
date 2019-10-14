@@ -122,8 +122,10 @@ export default class SvgarCube {
     }
 
     // Add a given slab to the svgar cube with a custom anchor point
-    public placeAt(slab: SvgarSlab, anchor: number[]): void {
-
+    public placeAt(slab: SvgarSlab, anchorX: number, anchorY: number): void {
+        let clone = slab.clone();
+        this.slabs.push(clone);
+        this.slabs[this.slabs.length - 1].setAnchor(anchorX, anchorY);
     }
 
     public flag(scope: SvgarCubeFlag): void {
@@ -140,11 +142,7 @@ export default class SvgarCube {
     // Activate any declared event listeners
     public listen(): void {
         document.querySelectorAll("path").forEach(x => {
-            console.log(x.id);
-            
             const path = Locate().svgar.path.withId(x.id).in.svgar.cube(this);
-
-            console.log(path);
 
             const events = path?.getAllEvents();
 
