@@ -35,7 +35,7 @@ class UpdateSvgarCubeContext {
         anchorTo: (x: number, y: number) => UpdateSvgarCubeContext,
         withZoom: (amount: number) => UpdateSvgarCubeContext,
         withPan: (xPan: number, yPan: number) => UpdateSvgarCubeContext,
-    };
+    }
 
     public slabs: {
         to: (slabs: SvgarSlab[]) => UpdateSvgarCubeContext,
@@ -147,7 +147,7 @@ class UpdateSvgarCubeContext {
 
     private updateSlabsRemove(test: (slab: SvgarSlab) => boolean): UpdateSvgarCubeContext {
         this.cube.slabs = this.cube.slabs.filter(x => !test(x));
-        
+
         return this;
     }
 }
@@ -162,12 +162,27 @@ class UpdateSvgarSlabContext {
 
     public state: {
         to: (state: string) => UpdateSvgarSlabContext,
-    };
+    }
+
+    public name: {
+        to: (name: string) => UpdateSvgarSlabContext,
+    }
+
+    public id: {
+        to: (name: string) => UpdateSvgarSlabContext,
+    }
+
+    public elevation: {
+        to: (elevation: number) => UpdateSvgarSlabContext,
+    }
 
     constructor(slab: SvgarSlab) {
         this.slab = slab;
 
         this.state = { to: this.updateStateTo.bind(this) };
+        this.name = { to: this.updateNameTo.bind(this) };
+        this.id = { to: this.updateIdTo.bind(this) };
+        this.elevation = { to: this.updateElevationTo.bind(this) };
     }
 
     private updateStateTo(state: string): UpdateSvgarSlabContext {
@@ -176,6 +191,27 @@ class UpdateSvgarSlabContext {
 
         return this;
     }
+
+    private updateNameTo(name: string): UpdateSvgarSlabContext {
+        this.slab.flag("style");
+        this.slab.setName(name);
+
+        return this;
+    }
+
+    private updateIdTo(id: string): UpdateSvgarSlabContext {
+        this.slab.flag("style");
+        this.slab.newId(id);
+
+        return this;
+    }
+
+    private updateElevationTo(elevation: number): UpdateSvgarSlabContext {
+        this.slab.setElevation(elevation);
+
+        return this;
+    }
+    
 }
 
 function updateSvgarPath(path: SvgarPath): UpdateSvgarPathContext {

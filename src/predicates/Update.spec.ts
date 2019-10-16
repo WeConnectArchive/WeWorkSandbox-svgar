@@ -7,14 +7,16 @@ import SvgarCube from './../models/SvgarCube';
 describe("given a default svgar slab", () => {
 
     const slab = new SvgarSlab("test");
-    slab.compile();
 
     describe("when updating its state", () => {
 
-        Update().svgar.slab(slab).state.to("newstate");
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).state.to("newstate");
+        });        
 
         it("should flag its state as changed", () => {
-            expect(slab.changedScope("state")).to.be.true;
+            expect(slab.checkFlag("state")).to.be.true;
         });
 
         it("should update the current state to the declared value", () => {
@@ -23,6 +25,43 @@ describe("given a default svgar slab", () => {
 
     });
 
+    describe("when updating its name", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).name.to("newname");
+        });
+
+        it("should flag its style as changed", () => {
+            expect(slab.checkFlag("style")).to.be.true;
+        });
+
+        it("should update the current name to the declared value", () => {
+            expect(slab.getName()).to.equal("newname");
+        });
+
+    });
+
+    describe("when updating its id", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).id.to("fakeid");
+        });
+
+        it("should update the current id to the declared value", () => {
+            expect(slab.getId()).to.equal("fakeid");
+        });
+
+    });
+
+    describe("when updating its elevation", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).elevation.to(5);
+        });
+    })
 });
 
 describe("given a default svgar cube", () => {
@@ -31,7 +70,7 @@ describe("given a default svgar cube", () => {
 
     describe("when updating its camera by changing the extents", () => {
 
-        beforeEach(() => {
+        before(() => {
             cube.compile(100, 100);
             Update().svgar.cube(cube).camera.extentsTo(5, 2, 10, 4);
         });
@@ -58,7 +97,7 @@ describe("given a default svgar cube", () => {
 
     describe("when updating its camera by changing the anchor", () => {
 
-        beforeEach(() => {
+        before(() => {
             cube.compile(100, 100);
             Update().svgar.cube(cube).camera.extentsTo(0, 0, 10, 10);
             Update().svgar.cube(cube).camera.anchorTo(10, 8);
@@ -82,7 +121,7 @@ describe("given a default svgar cube", () => {
 
     describe("when updating the camera by panning", () => {
 
-        beforeEach(() => {
+        before(() => {
             cube.compile(100, 100);
             Update().svgar.cube(cube).camera.extentsTo(0, 0, 10, 10);
             Update().svgar.cube(cube).camera.withPan(4.5, 11);
@@ -106,7 +145,7 @@ describe("given a default svgar cube", () => {
 
     describe("when updating the camera by zooming in", () => {
 
-        beforeEach(() => {
+        before(() => {
             cube.compile(100, 100);
             Update().svgar.cube(cube).camera.extentsTo(0, 0, 10, 10);
             Update().svgar.cube(cube).camera.withZoom(1.5);
@@ -134,7 +173,7 @@ describe("given a default svgar cube", () => {
 
     describe("when updating its slabs", () => {
 
-        beforeEach(() => {
+        before(() => {
             cube.compile(100, 100);
             Update().svgar.cube(cube).slabs.to([]);
         });

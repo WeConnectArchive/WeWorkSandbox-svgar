@@ -187,7 +187,7 @@ export default class SvgarSlab {
         }
     }
 
-    public changedScope(scope: SvgarSlabFlag): boolean {
+    public checkFlag(scope: SvgarSlabFlag): boolean {
         switch(scope) {
             case "style":
                 return this.changed.style;
@@ -212,8 +212,8 @@ export default class SvgarSlab {
         return this.id;
     }
 
-    public newId(): void {
-        this.id = uuid.default();
+    public newId(id?: string): void {
+        this.id = id ?? uuid.default();
     }
 
     public getName(): string {
