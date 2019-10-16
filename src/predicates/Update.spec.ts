@@ -29,11 +29,11 @@ describe("given a default svgar cube", () => {
 
     const cube = new SvgarCube();
 
-    describe("when updating its camera by extents", () => {
+    describe("when updating its camera by changing the extents", () => {
 
         beforeEach(() => {
             cube.compile(100, 100);
-            Update().svgar.cube(cube).camera.extentTo(5, 2, 10, 4);
+            Update().svgar.cube(cube).camera.extentsTo(5, 2, 10, 4);
         });
 
         it("should allow extents to be set", () => {
@@ -60,7 +60,7 @@ describe("given a default svgar cube", () => {
 
         beforeEach(() => {
             cube.compile(100, 100);
-            Update().svgar.cube(cube).camera.extentTo(0, 0, 10, 10);
+            Update().svgar.cube(cube).camera.extentsTo(0, 0, 10, 10);
             Update().svgar.cube(cube).camera.anchorTo(10, 8);
         });
 
@@ -71,7 +71,65 @@ describe("given a default svgar cube", () => {
         it("should accurately set the horizontal extents", () => {
             expect(cube.scope.minimum[0]).to.equal(5);
             expect(cube.scope.maximum[0]).to.equal(15);
-        })
-    })
+        });
+
+        it("should accurately set the vertical extents", () => {
+            expect(cube.scope.minimum[1]).to.equal(3);
+            expect(cube.scope.maximum[1]).to.equal(13);
+        });
+
+    });
+
+    describe("when updating the camera by panning", () => {
+
+        beforeEach(() => {
+            cube.compile(100, 100);
+            Update().svgar.cube(cube).camera.extentsTo(0, 0, 10, 10);
+            Update().svgar.cube(cube).camera.withPan(4.5, 11);
+        });
+
+        it("should flag the root scope as changed", () => {
+            expect(cube.checkFlag("root")).to.be.true;
+        });
+
+        it("should accurately set the horizontal extents", () => {
+            expect(cube.scope.minimum[0]).to.equal(4.5);
+            expect(cube.scope.maximum[0]).to.equal(14.5);
+        });
+
+        it("should accurately set the vertical extents", () => {
+            expect(cube.scope.minimum[1]).to.equal(11);
+            expect(cube.scope.maximum[1]).to.equal(21);
+        });
+
+    });
+
+    describe("when updating the camera by zooming in", () => {
+
+        beforeEach(() => {
+            cube.compile(100, 100);
+            Update().svgar.cube(cube).camera.extentsTo(0, 0, 10, 10);
+            Update().svgar.cube(cube).camera.withZoom(1.5);
+        });
+
+        it("should flag the root scope as changed", () => {
+            expect(cube.checkFlag("root")).to.be.true;
+        });
+
+        it('should accurately set the horizontal extents', () => {
+            expect(cube.scope.minimum[0]).to.equal(1.5);
+            expect(cube.scope.maximum[0]).to.equal(8.5);
+        });
+
+        it('should accurately set the vertical extents', () => {
+            expect(cube.scope.minimum[1]).to.equal(1.5);
+            expect(cube.scope.maximum[1]).to.equal(8.5);
+        });
+
+        it('should throw an error when asked to zoom in more than possible', () => {
+            expect(() => Update().svgar.cube(cube).camera.withZoom(50)).to.throw("Cannot zoom beyond a zero-width camera.");
+        });
+
+    });
 
 });

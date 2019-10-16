@@ -31,7 +31,7 @@ class UpdateSvgarCubeContext {
     private cube: SvgarCube;
 
     public camera: {
-        extentTo: (xMin: number, yMin: number, xMax: number, yMax: number) => UpdateSvgarCubeContext,
+        extentsTo: (xMin: number, yMin: number, xMax: number, yMax: number) => UpdateSvgarCubeContext,
         anchorTo: (x: number, y: number) => UpdateSvgarCubeContext,
         withZoom: (amount: number) => UpdateSvgarCubeContext,
         withPan: (xPan: number, yPan: number) => UpdateSvgarCubeContext,
@@ -39,6 +39,33 @@ class UpdateSvgarCubeContext {
 
     constructor(cube: SvgarCube) {
         this.cube = cube;
+
+        this.camera = {
+            extentsTo: this.updateCameraExtentsTo.bind(this),
+            anchorTo: this.updateCameraAnchorTo.bind(this),
+            withZoom: this.updateCameraWithZoom.bind(this),
+            withPan: this.updateCameraWithPan.bind(this)
+        }
+    }
+
+    private updateCameraExtentsTo(xMin: number, yMin: number, xMax: number, yMax: number): UpdateSvgarCubeContext {
+
+        return this;
+    }
+
+    private updateCameraAnchorTo(x: number, y: number): UpdateSvgarCubeContext {
+
+        return this;
+    }
+
+    private updateCameraWithZoom(amount: number): UpdateSvgarCubeContext {
+
+        return this;
+    }
+
+    private updateCameraWithPan(xPan: number, yPan: number): UpdateSvgarCubeContext {
+
+        return this;
     }
 }
 
