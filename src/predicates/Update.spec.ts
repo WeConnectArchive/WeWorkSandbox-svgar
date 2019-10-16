@@ -155,6 +155,44 @@ describe("given a default svgar slab", () => {
 
     });
 
+    describe("when removing states", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).states.to([
+                {
+                    name: "a",
+                    styles: {
+                        "stroke": "black"
+                    }
+                },
+                {
+                    name: "b",
+                    styles: {
+
+                    }
+                },
+                {
+                    name: "c",
+                    styles: {
+                        "stroke": "red"
+                    }
+                }
+            ]);
+            Update().svgar.slab(slab).states.remove(x => !Object.keys(x.styles).includes("stroke"));
+        });
+
+        it("should remove states that meet the critera", () => {
+            expect(slab.getAllStates().length).to.equal(2);
+            expect(slab.getAllStates().find(x => x.styles["stroke"] == undefined)).to.not.exist;
+        });
+
+        it("should flag slab state scope as changed", () => {
+            expect(slab.checkFlag("state")).to.be.true;
+        });
+
+    });
+
 });
 
 describe("given a default svgar cube", () => {

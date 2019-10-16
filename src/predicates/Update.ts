@@ -169,6 +169,7 @@ class UpdateSvgarSlabContext {
     public states: {
         to: (states: SvgarState[] ) => UpdateSvgarSlabContext,
         add: (states: SvgarState | SvgarState[] ) => UpdateSvgarSlabContext,
+        remove: (test: (state: SvgarState) => boolean) => UpdateSvgarSlabContext
     }
 
     public name: {
@@ -189,7 +190,8 @@ class UpdateSvgarSlabContext {
         this.state = { to: this.updateStateTo.bind(this) };
         this.states = { 
             to: this.updateStatesTo.bind(this),
-            add: this.updateStatesAdd.bind(this)
+            add: this.updateStatesAdd.bind(this),
+            remove: this.updateStatesRemove.bind(this)
         };
 
         this.name = { to: this.updateNameTo.bind(this) };
@@ -242,6 +244,13 @@ class UpdateSvgarSlabContext {
             this.slab.setAllStates(this.slab.getAllStates().concat(s));
         });
 
+        this.slab.flag("state");
+
+        return this;
+    }
+
+    private updateStatesRemove(test: (state: SvgarState) => boolean): UpdateSvgarSlabContext {
+        this.slab.setAllStates(this.slab.getAllStates().filter(x => !test(x)));
         this.slab.flag("state");
 
         return this;
