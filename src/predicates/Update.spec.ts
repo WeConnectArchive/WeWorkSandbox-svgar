@@ -132,4 +132,57 @@ describe("given a default svgar cube", () => {
 
     });
 
+    describe("when updating its slabs", () => {
+
+        beforeEach(() => {
+            cube.compile(100, 100);
+            Update().svgar.cube(cube).slabs.to([]);
+        });
+
+        it("should allow slabs to be set in aggregate", () => {
+            let slabs: SvgarSlab[] = [
+                new SvgarSlab("a"),
+                new SvgarSlab("b"),
+                new SvgarSlab("c")
+            ];
+
+            Update().svgar.cube(cube).slabs.to(slabs);
+
+            expect(cube.slabs.length).to.equal(3);
+        });
+
+        it("should allow slabs to be added one at a time", () => {
+            let slab = new SvgarSlab("a");
+
+            Update().svgar.cube(cube).slabs.add(slab);
+
+            expect(cube.slabs.length).to.equal(1);
+        });
+
+        it("should allow slabs to be added multiple at a time", () => {
+            let slabs: SvgarSlab[] = [
+                new SvgarSlab("a"),
+                new SvgarSlab("b")
+            ];
+
+            Update().svgar.cube(cube).slabs.add(slabs);
+
+            expect(cube.slabs.length).to.equal(2);
+        });
+
+        it("should allow slabs to be removed by a given filter criteria", () => {
+            let slabsTriple: SvgarSlab[] = [
+                new SvgarSlab("a"),
+                new SvgarSlab("b"),
+                new SvgarSlab("c")
+            ];
+
+            Update().svgar.cube(cube).slabs.to(slabsTriple);
+            Update().svgar.cube(cube).slabs.remove(x => x.getName() == "b");
+
+            expect(cube.slabs.length).to.equal(2);
+        });
+
+    });
+
 });

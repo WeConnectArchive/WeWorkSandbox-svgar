@@ -37,6 +37,12 @@ class UpdateSvgarCubeContext {
         withPan: (xPan: number, yPan: number) => UpdateSvgarCubeContext,
     };
 
+    public slabs: {
+        to: (slabs: SvgarSlab[]) => UpdateSvgarCubeContext,
+        add: (slabs: SvgarSlab | SvgarSlab[]) => UpdateSvgarCubeContext,
+        remove: (test: (slab: SvgarSlab) => boolean) => UpdateSvgarCubeContext
+    }
+
     constructor(cube: SvgarCube) {
         this.cube = cube;
 
@@ -44,7 +50,13 @@ class UpdateSvgarCubeContext {
             extentsTo: this.updateCameraExtentsTo.bind(this),
             anchorTo: this.updateCameraAnchorTo.bind(this),
             withZoom: this.updateCameraWithZoom.bind(this),
-            withPan: this.updateCameraWithPan.bind(this)
+            withPan: this.updateCameraWithPan.bind(this),
+        }
+
+        this.slabs = {
+            to: this.updateSlabsTo.bind(this),
+            add: this.updateSlabsAdd.bind(this),
+            remove: this.updateSlabsRemove.bind(this),
         }
     }
 
@@ -116,6 +128,26 @@ class UpdateSvgarCubeContext {
 
         this.cube.flag("root");
 
+        return this;
+    }
+
+    private updateSlabsTo(slabs: SvgarSlab[]): UpdateSvgarCubeContext {
+        this.cube.slabs = slabs;
+
+        return this;
+    }
+
+    private updateSlabsAdd(slabs: SvgarSlab | SvgarSlab[]): UpdateSvgarCubeContext {
+        const s: SvgarSlab[] = (slabs instanceof SvgarSlab) ? [slabs] : slabs;
+
+        this.cube.slabs = s;
+
+        return this;
+    }
+
+    private updateSlabsRemove(test: (slab: SvgarSlab) => boolean): UpdateSvgarCubeContext {
+        this.cube.slabs = this.cube.slabs.filter(x => !test(x));
+        
         return this;
     }
 }

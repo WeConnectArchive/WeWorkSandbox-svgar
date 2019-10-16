@@ -52,7 +52,7 @@ export default class SvgarCube {
 
     // Write out current state of svgar data as svg markup
     public compile(width: number, height: number): string {
-        
+
         // Compile root scope
         if (this.changed.root) {
             this.changed.root = false;
