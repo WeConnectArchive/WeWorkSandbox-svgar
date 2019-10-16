@@ -1,6 +1,8 @@
 import SvgarCube from "./../models/SvgarCube";
 import SvgarSlab from "./../models/SvgarSlab";
 import SvgarPath from "./../models/SvgarPath";
+import SvgarState from "./../models/SvgarState";
+import SvgarStyle from "./../models/SvgarStyle";
 
 export default function Update(): UpdateContext {
     const context: UpdateContext = {
@@ -164,6 +166,11 @@ class UpdateSvgarSlabContext {
         to: (state: string) => UpdateSvgarSlabContext,
     }
 
+    public states: {
+        to: (states: SvgarState[] ) => UpdateSvgarSlabContext,
+        add: (states: SvgarState | SvgarState[] ) => UpdateSvgarSlabContext,
+    }
+
     public name: {
         to: (name: string) => UpdateSvgarSlabContext,
     }
@@ -180,6 +187,11 @@ class UpdateSvgarSlabContext {
         this.slab = slab;
 
         this.state = { to: this.updateStateTo.bind(this) };
+        this.states = { 
+            to: this.updateStatesTo.bind(this),
+            add: this.updateStatesAdd.bind(this)
+        };
+
         this.name = { to: this.updateNameTo.bind(this) };
         this.id = { to: this.updateIdTo.bind(this) };
         this.elevation = { to: this.updateElevationTo.bind(this) };
@@ -211,7 +223,30 @@ class UpdateSvgarSlabContext {
 
         return this;
     }
-    
+
+    private updateStatesTo(states: SvgarState[] ): UpdateSvgarSlabContext {
+       this.slab.setAllStates(states);
+       this.slab.flag("state");
+
+       return this;
+    }
+
+    private updateStatesAdd(states: SvgarState | SvgarState[] ): UpdateSvgarSlabContext {
+        function isSvgarState(obj: any): obj is SvgarState {
+            return 'name' in obj;
+        } 
+ 
+        let s: SvgarState[] = isSvgarState(states) ? [states] : states;
+
+        s.forEach(x => {
+            this.slab.setAllStates(this.slab.getAllStates().concat(s));
+        });
+
+        this.slab.flag("state");
+
+        return this;
+    }
+
 }
 
 function updateSvgarPath(path: SvgarPath): UpdateSvgarPathContext {

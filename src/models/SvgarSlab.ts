@@ -1,19 +1,7 @@
 import * as uuid from 'uuid/v4';
 import SvgarPath from './SvgarPath';
-
-interface SvgarState {
-    name: string,
-    styles: {
-        [tag: string]: string,
-    }
-}
-
-interface SvgarStyle {
-    name: string,
-    attributes: {
-        [attribute: string]: string,
-    }
-}
+import SvgarState from './SvgarState';
+import SvgarStyle from './SvgarStyle';
 
 interface SvgarSlabCache {
     style: string,

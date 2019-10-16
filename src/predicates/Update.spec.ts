@@ -61,7 +61,100 @@ describe("given a default svgar slab", () => {
             slab.compile();
             Update().svgar.slab(slab).elevation.to(5);
         });
-    })
+
+        it("should update the current elevation to the declared value", () => {
+            expect(slab.getElevation()).to.equal(5);
+        });
+
+    });
+
+    describe("when updating its states in aggregate", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).states.to([]);
+            Update().svgar.slab(slab).states.to([
+                {
+                    name: "test",
+                    styles: {
+
+                    }
+                },
+                {
+                    name: "other",
+                    styles: {
+
+                    }
+                }
+            ]);
+        });
+
+        it("should allow states to be set in aggregate", () => {
+            expect(slab.getAllStates().length).to.equal(2);
+        });
+
+        it("should flag slab state scope as changed", () => {
+            expect(slab.checkFlag("state")).to.be.true;
+        })
+
+    });
+
+    describe("when adding states individually", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).states.to([]);
+            Update().svgar.slab(slab).states.add([
+                {
+                    name: "test",
+                    styles: {
+
+                    }
+                }
+            ]);
+        });
+
+        it("should allow states to be added individually", () => {
+            expect(slab.getAllStates().length).to.equal(1);
+        });
+
+        it("should flag slab state scope as changed", () => {
+            expect(slab.checkFlag("state")).to.be.true;
+        });
+
+    });
+
+    describe("when adding multiple states at once", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).states.to([]);
+            Update().svgar.slab(slab).states.to([
+                {
+                    name: "test",
+                    styles: {
+
+                    }
+                },
+                {
+                    name: "othertest",
+                    styles: {
+
+                    }
+                }
+            ]);
+        });
+
+        it("should add all states declared", () => {
+            expect(slab.getAllStates().map(x => x.name).includes("othertest")).to.be.true;
+        });
+
+        it("should flag slab state scope as changed", () => {
+            expect(slab.checkFlag("state")).to.be.true;
+        });
+
+    });
+
 });
 
 describe("given a default svgar cube", () => {
@@ -173,7 +266,7 @@ describe("given a default svgar cube", () => {
 
     describe("when updating its slabs", () => {
 
-        before(() => {
+        beforeEach(() => {
             cube.compile(100, 100);
             Update().svgar.cube(cube).slabs.to([]);
         });
