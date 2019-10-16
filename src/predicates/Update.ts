@@ -49,21 +49,72 @@ class UpdateSvgarCubeContext {
     }
 
     private updateCameraExtentsTo(xMin: number, yMin: number, xMax: number, yMax: number): UpdateSvgarCubeContext {
+        this.cube.scope = {
+            maximum: [xMax, yMax],
+            minimum: [xMin, yMin]
+        }
+
+        this.cube.flag("root");
 
         return this;
     }
 
     private updateCameraAnchorTo(x: number, y: number): UpdateSvgarCubeContext {
+        const minX = this.cube.scope.minimum[0];
+        const minY = this.cube.scope.minimum[1];
+        const maxX = this.cube.scope.maximum[0];
+        const maxY = this.cube.scope.maximum[1];
+
+        const aX = ( maxX + minX ) / 2;
+        const aY = ( maxY + minY ) / 2;
+
+        const dX = x - aX;
+        const dY = y - aY;
+
+        this.cube.scope = {
+            minimum: [minX + dX, minY + dY],
+            maximum: [maxX + dX, maxY + dY]
+        }
+
+        this.cube.flag("root");
 
         return this;
     }
 
     private updateCameraWithZoom(amount: number): UpdateSvgarCubeContext {
+        const minX = this.cube.scope.minimum[0];
+        const minY = this.cube.scope.minimum[1];
+        const maxX = this.cube.scope.maximum[0];
+        const maxY = this.cube.scope.maximum[1];
+
+        if (amount > 0) {
+            if (maxX - minX < 2 * amount || maxY - minY < 2 * amount) {
+                throw new Error("Cannot zoom beyond a zero-width camera.");
+            }
+        }
+
+        this.cube.scope = {
+            minimum: [minX + amount, minY + amount],
+            maximum: [maxX - amount, maxY - amount]
+        }
+
+        this.cube.flag("root");
 
         return this;
     }
 
     private updateCameraWithPan(xPan: number, yPan: number): UpdateSvgarCubeContext {
+        const minX = this.cube.scope.minimum[0];
+        const minY = this.cube.scope.minimum[1];
+        const maxX = this.cube.scope.maximum[0];
+        const maxY = this.cube.scope.maximum[1];
+
+        this.cube.scope = {
+            minimum: [minX + xPan, minY + yPan],
+            maximum: [maxX + xPan, maxY + yPan]
+        }
+
+        this.cube.flag("root");
 
         return this;
     }
