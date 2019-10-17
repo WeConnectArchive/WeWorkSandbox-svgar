@@ -163,7 +163,7 @@ describe("given a default svgar slab", () => {
                 {
                     name: "a",
                     styles: {
-                        "stroke": "black"
+                        "wall": "black"
                     }
                 },
                 {
@@ -175,16 +175,16 @@ describe("given a default svgar slab", () => {
                 {
                     name: "c",
                     styles: {
-                        "stroke": "red"
+                        "floor": "red"
                     }
                 }
             ]);
-            Update().svgar.slab(slab).states.remove(x => !Object.keys(x.styles).includes("stroke"));
+            Update().svgar.slab(slab).states.remove(x => x.name == "b");
         });
 
         it("should remove states that meet the critera", () => {
             expect(slab.getAllStates().length).to.equal(2);
-            expect(slab.getAllStates().find(x => x.styles["stroke"] == undefined)).to.not.exist;
+            expect(slab.getAllStates().find(x => x.name == "b")).to.not.exist;
         });
 
         it("should flag slab state scope as changed", () => {
@@ -213,9 +213,68 @@ describe("given a default svgar slab", () => {
             ]);
         });
 
-        it("should set styles to only the declared collection", () => {
-            expect(slab.getAllStyles().length).to.equal(2);
+        it("should set styles to only the declared collection and a default style", () => {
+            expect(slab.getAllStyles().length).to.equal(3);
             expect(slab.getAllStyles().map(x => x.name).includes("fill")).to.be.true;
+        });
+
+        it("should flag slab style scope as changed", () => {
+            expect(slab.checkFlag("style")).to.be.true;
+        });
+
+    });
+
+    describe("when adding styles one at a time", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).styles.add({
+                name: "single",
+                attributes: {
+                    "stroke": "red",
+                }
+            });
+        });
+
+        it("should add the declared style", () => {
+            expect(slab.getAllStyles().map(x => x.name).includes("single")).to.be.true;
+        });
+
+        it("should flag slab style scope as changed", () => {
+            expect(slab.checkFlag("style")).to.be.true;
+        });
+
+    });
+
+    describe("when removing styles", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).styles.to([
+                {
+                    name: "first",
+                    attributes: {
+                        "stroke": "red"
+                    }
+                },
+                {
+                    name: "second",
+                    attributes: {
+                        "stroke": "blue"
+                    }
+                },
+                {
+                    name: "third",
+                    attributes: {
+                        "stroke": "green"
+                    }
+                }
+            ]);
+            Update().svgar.slab(slab).styles.remove(x => x.attributes["stroke"] != "blue");
+        });
+
+        it("should remove any styles that match the given test", () => {
+            expect(slab.getAllStyles().length).to.equal(2);
         });
 
         it("should flag slab style scope as changed", () => {

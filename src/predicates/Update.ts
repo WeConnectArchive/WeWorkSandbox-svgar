@@ -174,8 +174,8 @@ class UpdateSvgarSlabContext {
 
     public styles!: {
         to: (styles: SvgarStyle[] ) => UpdateSvgarSlabContext,
-        //add: (styles: SvgarStyle | SvgarStyle[] ) => UpdateSvgarSlabContext,
-        //remove: (test: (style: SvgarStyle) => boolean) => UpdateSvgarSlabContext,
+        add: (styles: SvgarStyle | SvgarStyle[] ) => UpdateSvgarSlabContext,
+        remove: (test: (style: SvgarStyle) => boolean) => UpdateSvgarSlabContext,
     }
 
     public name: {
@@ -202,6 +202,8 @@ class UpdateSvgarSlabContext {
 
         this.styles = {
             to: this.updateStylesTo.bind(this),
+            add: this.updateStylesAdd.bind(this),
+            remove: this.updateStylesRemove.bind(this)
         }
 
         this.name = { to: this.updateNameTo.bind(this) };
@@ -273,6 +275,26 @@ class UpdateSvgarSlabContext {
         return this;
     }
 
+    private updateStylesAdd(styles: SvgarStyle | SvgarStyle[] ): UpdateSvgarSlabContext {
+        function isSvgarStyle(obj: any): obj is SvgarStyle {
+            return 'name' in obj;
+        }
+
+        let s: SvgarStyle[] = isSvgarStyle(styles) ? [styles] : styles;
+
+        this.slab.setAllStyles(this.slab.getAllStyles().concat(s));
+
+        this.slab.flag("style");
+
+        return this;
+    }
+
+    private updateStylesRemove(test: (style: SvgarStyle) => boolean): UpdateSvgarSlabContext {
+        this.slab.setAllStyles(this.slab.getAllStyles().filter(x => !test(x)));
+        this.slab.flag("style");
+
+        return this;
+    }
 }
 
 function updateSvgarPath(path: SvgarPath): UpdateSvgarPathContext {
