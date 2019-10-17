@@ -193,6 +193,37 @@ describe("given a default svgar slab", () => {
 
     });
 
+    describe("when setting all styles", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).styles.to([
+                {
+                    name: "test",
+                    attributes: {
+                        "stroke": "black"
+                    }
+                },
+                {
+                    name: "fill",
+                    attributes: {
+                        "fill": "red"
+                    }
+                }
+            ]);
+        });
+
+        it("should set styles to only the declared collection", () => {
+            expect(slab.getAllStyles().length).to.equal(2);
+            expect(slab.getAllStyles().map(x => x.name).includes("fill")).to.be.true;
+        });
+
+        it("should flag slab style scope as changed", () => {
+            expect(slab.checkFlag("style")).to.be.true;
+        });
+
+    });
+
 });
 
 describe("given a default svgar cube", () => {
