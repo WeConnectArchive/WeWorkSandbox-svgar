@@ -172,10 +172,16 @@ class UpdateSvgarSlabContext {
         remove: (test: (state: SvgarState) => boolean) => UpdateSvgarSlabContext
     }
 
-    public styles!: {
+    public styles: {
         to: (styles: SvgarStyle[] ) => UpdateSvgarSlabContext,
         add: (styles: SvgarStyle | SvgarStyle[] ) => UpdateSvgarSlabContext,
         remove: (test: (style: SvgarStyle) => boolean) => UpdateSvgarSlabContext,
+    }
+
+    public geometry: {
+        to: (paths: SvgarPath[] ) => UpdateSvgarSlabContext,
+        add: (paths: SvgarPath | SvgarPath[] ) => UpdateSvgarSlabContext,
+        remove: (test: (path: SvgarPath) => boolean) => UpdateSvgarSlabContext,
     }
 
     public name: {
@@ -204,6 +210,12 @@ class UpdateSvgarSlabContext {
             to: this.updateStylesTo.bind(this),
             add: this.updateStylesAdd.bind(this),
             remove: this.updateStylesRemove.bind(this)
+        }
+
+        this.geometry = {
+            to: this.updateGeometryTo.bind(this),
+            add: this.updateGeometryAdd.bind(this),
+            remove: this.updateGeometryRemove.bind(this)
         }
 
         this.name = { to: this.updateNameTo.bind(this) };
@@ -293,6 +305,31 @@ class UpdateSvgarSlabContext {
         this.slab.setAllStyles(this.slab.getAllStyles().filter(x => !test(x)));
         this.slab.flag("style");
 
+        return this;
+    }
+
+    private updateGeometryTo(paths: SvgarPath[] ): UpdateSvgarSlabContext {
+        this.slab.setAllGeometry(paths);
+        this.slab.flag("geometry");
+
+        return this;
+    } 
+
+    private updateGeometryAdd(paths: SvgarPath | SvgarPath[] ): UpdateSvgarSlabContext {
+        let p: SvgarPath[] = paths instanceof SvgarPath ? [paths] : paths;
+
+        this.slab.setAllGeometry(this.slab.getAllGeometry().concat(p));
+
+        this.slab.flag("geometry");
+
+        return this;
+    }
+
+    private updateGeometryRemove(test: (path: SvgarPath) => boolean): UpdateSvgarSlabContext {
+        this.slab.setAllGeometry(this.slab.getAllGeometry().filter(x => !test(x)));
+
+        this.slab.flag("geometry");
+        
         return this;
     }
 }

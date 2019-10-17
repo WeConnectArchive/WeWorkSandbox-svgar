@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import 'mocha';
 import SvgarSlab from './../models/SvgarSlab';
 import SvgarCube from './../models/SvgarCube';
+import SvgarPath from './../models/SvgarPath';
 
 describe("given a default svgar slab", () => {
 
@@ -246,6 +247,37 @@ describe("given a default svgar slab", () => {
 
     });
 
+    describe("when adding multiple styles at once", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).styles.to([]);
+            Update().svgar.slab(slab).styles.add([
+                {
+                    name: "one",
+                    attributes: {
+
+                    }
+                },
+                {
+                    name: "two",
+                    attributes: {
+
+                    }
+                }
+            ]);
+        });
+
+        it("should add all declared styles in array to slab", () => {
+            expect(slab.getAllStyles().length).to.equal(3);
+        });
+
+        it("should flag slab style scope as changed", () => {
+            expect(slab.checkFlag("style")).to.be.true;
+        });
+
+    });
+
     describe("when removing styles", () => {
 
         before(() => {
@@ -279,6 +311,95 @@ describe("given a default svgar slab", () => {
 
         it("should flag slab style scope as changed", () => {
             expect(slab.checkFlag("style")).to.be.true;
+        });
+
+    });
+
+    describe("when setting all geometry at once", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).geometry.to([
+                new SvgarPath([]),
+                new SvgarPath([]),
+                new SvgarPath([])
+            ]);
+        });
+
+        it("should set all geometry at once", () => {
+            expect(slab.getAllGeometry().length).to.equal(3);
+        });
+
+        it("should flag slab geometry scope as changed", () => {
+            expect(slab.checkFlag("geometry")).to.be.true;
+        });
+
+    });
+
+    describe("when adding geometry one at a time", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).geometry.to([]);
+            Update().svgar.slab(slab).geometry.add(new SvgarPath([]));
+        });
+
+        it("should add the declared geometry", () => {
+            expect(slab.getAllGeometry().length).to.equal(1);
+        });
+
+        it("should flag slab geometry scope as changed", () => {
+            expect(slab.checkFlag("geometry")).to.be.true;
+        });
+
+    });
+
+    describe("when adding multiple pieces of geometry at once", () => {
+
+        before(() => {
+            slab.compile();
+            Update().svgar.slab(slab).geometry.to([]);
+            Update().svgar.slab(slab).geometry.add([
+                new SvgarPath([]),
+                new SvgarPath([])
+            ]);
+        });
+
+        it("should add all geometries declared to slab", () => {
+            expect(slab.getAllGeometry().length).to.equal(2);
+        });
+
+        it("should flag slab geometry scope as changed", () => {
+            expect(slab.checkFlag("geometry")).to.be.true;
+        });
+
+    });
+
+    describe("when removing geometry", () => {
+
+        before(() => {
+            slab.compile();
+
+            let testPath = new SvgarPath([]);
+            testPath.setTag("test");
+
+            Update().svgar.slab(slab).geometry.to([
+                new SvgarPath([]),
+                new SvgarPath([]),
+                new SvgarPath([]),
+                testPath
+            ]);
+
+            Update().svgar.slab(slab).geometry.remove(x => x.getTag() == "test");
+        });
+
+        it("should remove paths that match the given criteria", () => {
+            expect(slab.getAllGeometry().map(x => x.getTag()).includes("test")).to.be.false;
+            expect(slab.getAllGeometry().length).to.equal(3);
+        });
+
+        it("should flag slab geometry scope as changed", () => {
+            expect(slab.checkFlag("geometry")).to.be.true;
         });
 
     });
