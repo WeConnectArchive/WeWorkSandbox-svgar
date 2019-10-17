@@ -356,7 +356,7 @@ class UpdateSvgarSlabContext {
         this.slab.maskWith(slab);
 
         this.slab.flag("mask");
-        
+
         return this;
     }
 }
@@ -369,7 +369,56 @@ class UpdateSvgarPathContext {
 
     private path: SvgarPath;
 
+    public id: {
+        to: (id: string) => UpdateSvgarPathContext,
+    }
+
+    public tag: {
+        to: (tag: string) => UpdateSvgarPathContext,
+    }
+
+    public elevation: {
+        to: (elevation: number) => UpdateSvgarPathContext,
+    }
+
+    public coordinates: {
+        to: (coordinates: number[]) => UpdateSvgarPathContext
+    }
+
     constructor(path: SvgarPath) {
         this.path = path;
+
+        this.id = { to: this.updateIdTo.bind(this) }
+        this.tag = { to: this.updateTagTo.bind(this) }
+        this.elevation = { to: this.updateElevationTo.bind(this) }
+        this.coordinates = { to: this.updateCoordinatesTo.bind(this) }
+    }
+
+    private updateIdTo(id: string): UpdateSvgarPathContext {
+        this.path.newId(id);
+        return this;
+    }
+
+    private updateTagTo(tag: string): UpdateSvgarPathContext {
+        this.path.setTag(tag);
+        return this;
+    }
+
+    private updateElevationTo(elevation: number): UpdateSvgarPathContext {
+        this.path.setElevation(elevation);
+        return this;
+    }
+
+    private updateCoordinatesTo(coordinates: number[] ): UpdateSvgarPathContext {
+        if(coordinates.length % 8 != 0) {
+            throw new Error("Coordinate array total must be evenly divisible by 8.");
+        }
+
+        this.path.setCoordinates(coordinates);
+        this.path.segments = coordinates.length / 8;
+
+        this.path.flag("geometry");
+
+        return this;
     }
 }

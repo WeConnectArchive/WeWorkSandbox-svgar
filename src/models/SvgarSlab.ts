@@ -116,7 +116,8 @@ export default class SvgarSlab {
         }
 
         // Compile stateful geometric information
-        if(this.changed.state || this.changed.geometry) {
+        // ( Chuck ) Reconsidering flag structure. Slab is blind to path changes.
+        if(true) {
             this.changed.state = false;
             this.changed.geometry = false;
 

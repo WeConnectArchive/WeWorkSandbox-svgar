@@ -5,6 +5,80 @@ import SvgarSlab from './../models/SvgarSlab';
 import SvgarCube from './../models/SvgarCube';
 import SvgarPath from './../models/SvgarPath';
 
+describe("given a default svgar path", () => {
+
+    let path = new SvgarPath([]);
+
+    describe("when updating its id", () => {
+
+        before(() => {
+            path.compile();
+            Update().svgar.path(path).id.to("test-id");
+        });
+
+        it("should set the path id to the declared value", () => {
+            expect(path.getId()).to.equal("test-id");
+        });
+
+    });
+
+    describe("when updating its tag", () => {
+
+        before(() => {
+            path.compile();
+            Update().svgar.path(path).tag.to("test-tag");
+        });
+
+        it("should set the path tag to the declared value", () => {
+            expect(path.getTag()).to.equal("test-tag");
+        });
+
+    });
+
+    describe("when updating its elevation", () => {
+
+        before(() => {
+            path.compile();
+            Update().svgar.path(path).elevation.to(50);
+        });
+
+        it("should set the path elevation to the declared value", () => {
+            expect(path.getElevation()).to.equal(50);
+        });
+
+    });
+
+    describe("when updating its coordinates", () => {
+
+        before(() => {
+            path.compile();
+            Update().svgar.path(path).coordinates.to([0, 0, 5, 5, 5, 5, 10, 10]);
+        });
+
+        it("should set the path coordinates to the declared array", () => {
+            expect(path.getCoordinates().length).to.equal(8);
+        });
+
+        it("should update the number of segments on the path", () => {
+            expect(path.segments).to.equal(1);
+        });
+
+        it("should flag path geometry scope as changed", () => {
+            expect(path.checkFlag("geometry")).to.be.true;
+        });
+
+    });
+
+    describe("when updating its coordinates with invalid data", () => {
+
+        it("should throw an error", () => {
+            expect(() => Update().svgar.path(path).coordinates.to([2, 2, 3])).to.throw("Coordinate array total must be evenly divisible by 8.");
+        });
+        
+    });
+
+});
+
 describe("given a default svgar slab", () => {
 
     const slab = new SvgarSlab("test");

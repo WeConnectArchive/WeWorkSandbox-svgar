@@ -80,6 +80,13 @@ export default class SvgarPath {
         }
     }
 
+    public checkFlag(scope: SvgarCubeFlag): boolean {
+        switch(scope) {
+            case "geometry":
+                return this.changed.geometry;
+        }
+    }
+
     public changedAny(): boolean {
         return this.changed.geometry;
     }
@@ -96,8 +103,8 @@ export default class SvgarPath {
         return this.id;
     }
 
-    public newId(): string {
-        this.id = uuid.default();
+    public newId(id?: string): string {
+        this.id = id ?? uuid.default();
         return this.id;
     }
 
@@ -119,6 +126,10 @@ export default class SvgarPath {
 
     public getCoordinates(): number[] {
         return this.coordinates;
+    }
+
+    public setCoordinates(coordinates: number[]): void {
+        this.coordinates = coordinates;
     }
 
     public isClosed(): boolean {
