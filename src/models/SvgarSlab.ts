@@ -1,19 +1,7 @@
 import * as uuid from 'uuid/v4';
 import SvgarPath from './SvgarPath';
-
-interface SvgarState {
-    name: string,
-    styles: {
-        [tag: string]: string,
-    }
-}
-
-interface SvgarStyle {
-    name: string,
-    attributes: {
-        [attribute: string]: string,
-    }
-}
+import SvgarState from './SvgarState';
+import SvgarStyle from './SvgarStyle';
 
 interface SvgarSlabCache {
     style: string,
@@ -128,14 +116,15 @@ export default class SvgarSlab {
         }
 
         // Compile stateful geometric information
-        if(this.changed.state || this.changed.geometry) {
+        // ( Chuck ) Reconsidering flag structure. Slab is blind to path changes.
+        if(true) {
             this.changed.state = false;
             this.changed.geometry = false;
 
             let paths: string[] = [];
 
             this.geometry.sort((a, b) => a.getElevation() - b.getElevation()).forEach(path => {
-                path.compile();
+                path.compile(this.anchor[0], this.anchor[1]);
                 paths.push(`<path vector-effect="non-scaling-stroke" id="${path.getId()}" class="${this.mapTagToStyle(path.getTag())}" ${path.cache.d} />`);
             });
 
@@ -187,6 +176,23 @@ export default class SvgarSlab {
         }
     }
 
+    public checkFlag(scope: SvgarSlabFlag): boolean {
+        switch(scope) {
+            case "style":
+                return this.changed.style;
+            case "state":
+                return this.changed.state;
+            case "geometry":
+                return this.changed.geometry;
+            case "clipPath":
+                return this.changed.clipPath;
+            case "mask":
+                return this.changed.mask;
+            default:
+                return false;
+        }
+    }
+
     public changedAny(): boolean {
         return this.changed.style || this.changed.state || this.changed.geometry || this.changed.mask || this.changed.clipPath;
     }
@@ -195,8 +201,8 @@ export default class SvgarSlab {
         return this.id;
     }
 
-    public newId(): void {
-        this.id = uuid.default();
+    public newId(id?: string): void {
+        this.id = id ?? uuid.default();
     }
 
     public getName(): string {
@@ -302,6 +308,14 @@ export default class SvgarSlab {
 
     public getClip(): SvgarSlab | undefined {
         return this.clip;
+    }
+
+    public maskWith(slab: SvgarSlab): void {
+        this.mask = slab;
+    }
+
+    public getMask(): SvgarSlab | undefined {
+        return this.mask;
     }
 
     // Given a tag, return its style in the active state

@@ -44,10 +44,13 @@ export default class SvgarPath {
         this.events = {};
     }
 
-    public compile(): void {
+    public compile(ax?: number, ay?: number): void {
         if(!this.changed.geometry) {
             return;
         }
+
+        const dx = ax ?? 0;
+        const dy = ay ?? 0;
 
         this.changed.geometry = false;
 
@@ -57,10 +60,10 @@ export default class SvgarPath {
         for (let i = 0; i < c.length; i+=8) {
             
             if (i == 0) {
-                d += `M ${c[i]} ${-c[i + 1]}`
+                d += `M ${c[i] + dx} ${-(c[i + 1] + dy)}`
             }
 
-            d += ` C ${c[i + 2]} ${-c[i + 3]} ${c[i + 4]} ${-c[i + 5]} ${c[i + 6]} ${-c[i + 7]}`
+            d += ` C ${c[i + 2] + dx} ${-(c[i + 3] + dy)} ${c[i + 4] + dx} ${-(c[i + 5] + dy)} ${c[i + 6] + dx} ${-(c[i + 7] + dy)}`
 
         }
 
@@ -74,6 +77,13 @@ export default class SvgarPath {
             case "geometry":
                 this.changed.geometry = true;
                 break;
+        }
+    }
+
+    public checkFlag(scope: SvgarCubeFlag): boolean {
+        switch(scope) {
+            case "geometry":
+                return this.changed.geometry;
         }
     }
 
@@ -93,8 +103,8 @@ export default class SvgarPath {
         return this.id;
     }
 
-    public newId(): string {
-        this.id = uuid.default();
+    public newId(id?: string): string {
+        this.id = id ?? uuid.default();
         return this.id;
     }
 
@@ -116,6 +126,10 @@ export default class SvgarPath {
 
     public getCoordinates(): number[] {
         return this.coordinates;
+    }
+
+    public setCoordinates(coordinates: number[]): void {
+        this.coordinates = coordinates;
     }
 
     public isClosed(): boolean {

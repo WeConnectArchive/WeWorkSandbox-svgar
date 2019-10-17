@@ -73,8 +73,6 @@ describe('given a slab with one path and one local style', () => {
     describe('when compiled', () => {
 
         slab.compile();
-        console.log(slab.cache.style);
-        console.log(slab.cache.geometry);
 
         it('should have all fields flagged as unchanged', () => {
             expect(slab.changedAny()).to.be.false;

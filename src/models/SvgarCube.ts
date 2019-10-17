@@ -52,7 +52,7 @@ export default class SvgarCube {
 
     // Write out current state of svgar data as svg markup
     public compile(width: number, height: number): string {
-        
+
         // Compile root scope
         if (this.changed.root) {
             this.changed.root = false;
@@ -122,8 +122,10 @@ export default class SvgarCube {
     }
 
     // Add a given slab to the svgar cube with a custom anchor point
-    public placeAt(slab: SvgarSlab, anchor: number[]): void {
-
+    public placeAt(slab: SvgarSlab, anchorX: number, anchorY: number): void {
+        let clone = slab.clone();
+        this.slabs.push(clone);
+        this.slabs[this.slabs.length - 1].setAnchor(anchorX, anchorY);
     }
 
     public flag(scope: SvgarCubeFlag): void {
@@ -134,6 +136,15 @@ export default class SvgarCube {
             case "root":
                 this.changed.root = true;
                 break;
+        }
+    }
+
+    public checkFlag(scope: SvgarCubeFlag): boolean {
+        switch(scope) {
+            case "global":
+                return this.changed.global;
+            case "root":
+                return this.changed.root;
         }
     }
 
@@ -149,7 +160,8 @@ export default class SvgarCube {
             }
 
             Object.keys(events).forEach(e => {
-                document.addEventListener(e, events[e])
+                console.log(e);
+                x.addEventListener(e, events[e])
             });
         })
     }
