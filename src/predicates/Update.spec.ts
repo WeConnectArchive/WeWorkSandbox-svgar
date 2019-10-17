@@ -404,6 +404,42 @@ describe("given a default svgar slab", () => {
 
     });
 
+    describe("when updating its clip path", () => {
+
+        before(() => {
+            slab.compile();
+            let clip = new SvgarSlab("test-clip");
+            Update().svgar.slab(slab).clipPath.to(clip);
+        });
+
+        it("should set the current clip path to the declared slab", () => {
+            expect(slab.getClip()?.getName()).to.equal("test-clip");
+        });
+
+        it("should flag slab clip scope as changed", () => {
+            expect(slab.checkFlag("clipPath")).to.be.true;
+        });
+
+    });
+
+    describe("when updating its mask", () => {
+
+        before(() => {
+            slab.compile();
+            let mask = new SvgarSlab("test-mask");
+            Update().svgar.slab(slab).mask.to(mask);
+        });
+
+        it("should set the current mask to the declared slab", () => {
+            expect(slab.getMask()?.getName()).to.equal("test-mask");
+        });
+
+        it("should flag slab mask scope as changed", () => {
+            expect(slab.checkFlag("mask")).to.be.true;
+        });
+
+    });
+
 });
 
 describe("given a default svgar cube", () => {

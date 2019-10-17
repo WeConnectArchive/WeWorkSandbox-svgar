@@ -309,6 +309,14 @@ export default class SvgarSlab {
         return this.clip;
     }
 
+    public maskWith(slab: SvgarSlab): void {
+        this.mask = slab;
+    }
+
+    public getMask(): SvgarSlab | undefined {
+        return this.mask;
+    }
+
     // Given a tag, return its style in the active state
     public mapTagToStyle(tag: string): string {
         return this.states.find(x => x.name == this.state)?.styles[tag] ?? "default";

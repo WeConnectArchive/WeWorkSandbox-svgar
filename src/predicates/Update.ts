@@ -184,6 +184,14 @@ class UpdateSvgarSlabContext {
         remove: (test: (path: SvgarPath) => boolean) => UpdateSvgarSlabContext,
     }
 
+    public clipPath: {
+        to: (clip: SvgarSlab) => UpdateSvgarSlabContext,
+    }
+
+    public mask: {
+        to: (mask: SvgarSlab) => UpdateSvgarSlabContext,
+    }
+
     public name: {
         to: (name: string) => UpdateSvgarSlabContext,
     }
@@ -217,6 +225,9 @@ class UpdateSvgarSlabContext {
             add: this.updateGeometryAdd.bind(this),
             remove: this.updateGeometryRemove.bind(this)
         }
+
+        this.clipPath = { to: this.updateClipPathTo.bind(this) };
+        this.mask = { to: this.updateMaskTo.bind(this) };
 
         this.name = { to: this.updateNameTo.bind(this) };
         this.id = { to: this.updateIdTo.bind(this) };
@@ -329,6 +340,22 @@ class UpdateSvgarSlabContext {
         this.slab.setAllGeometry(this.slab.getAllGeometry().filter(x => !test(x)));
 
         this.slab.flag("geometry");
+
+        return this;
+    }
+
+    private updateClipPathTo(slab: SvgarSlab): UpdateSvgarSlabContext {
+        this.slab.clipWith(slab);
+
+        this.slab.flag("clipPath");
+
+        return this;
+    }
+
+    private updateMaskTo(slab: SvgarSlab): UpdateSvgarSlabContext {
+        this.slab.maskWith(slab);
+
+        this.slab.flag("mask");
         
         return this;
     }
