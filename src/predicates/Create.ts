@@ -33,6 +33,8 @@ class CreateSvgarCubeContext {
     }
 
     private name: string;
+    private slabs: SvgarSlab[] | undefined;
+    private camera: number[] | undefined;
 
     constructor(name: string) {
         this.then = { build: this.build.bind(this) }
@@ -43,7 +45,30 @@ class CreateSvgarCubeContext {
     private build(): SvgarCube {
         let cube = new SvgarCube(this.name);
 
+        cube.slabs = this.slabs ?? [];
+        cube.scope = {
+            minimum: [this.camera?.[0] ?? 0, this.camera?.[1] ?? 0],
+            maximum: [this.camera?.[2] ?? 1, this.camera?.[3] ?? 1]
+        }
+
         return cube;
+    }
+
+    public withSlabs(slabs: SvgarSlab[]): CreateSvgarCubeContext {
+        this.slabs = slabs;
+
+        return this;
+    }
+
+    public withCameraExtents(xMin: number, yMin: number, xMax: number, yMax: number): CreateSvgarCubeContext {
+        this.camera = [
+            xMin,
+            yMin,
+            xMax,
+            yMax
+        ]
+        
+        return this;
     }
 
 }
