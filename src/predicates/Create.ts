@@ -3,6 +3,9 @@ import SvgarSlab from './../models/SvgarSlab';
 import SvgarPath from './../models/SvgarPath';
 import SvgarState from './../models/SvgarState';
 import SvgarStyle from './../models/SvgarStyle';
+import PolylineBuilder from './../builders/PolylineBuilder';
+import CircleBuilder from './../builders/CircleBuilder';
+import CurveBuilder from './../builders/CurveBuilder';
 
 export default function Create(): CreateContext {
     const context: CreateContext = {
@@ -146,8 +149,83 @@ class CreateSvgarSlabContext {
 
 class CreateSvgarPathContext {
 
-    constructor() {
+    public then: {
+        build: () => SvgarPath,
+    }
 
+    public from: {
+        polyline: (builder: PolylineBuilder) => SvgarPath,
+        circle: (builder: CircleBuilder) => SvgarPath,
+        curve: (builder: CurveBuilder) => SvgarPath
+    }
+
+    private tag: string | undefined;
+    private id: string | undefined;
+    private elevation: number | undefined;
+    private coordinates: number[] | undefined;
+
+    private events: {
+        [event: string]: () => any;
+    } = {};
+
+    constructor() {
+        this.then = { build: this.build.bind(this) }
+        this.from = {
+            polyline: this.fromPolyline.bind(this),
+            circle: this.fromCircle.bind(this),
+            curve: this.fromCurve.bind(this)
+        }
+    }
+
+    private build(): SvgarPath {
+        let path = new SvgarPath(this.coordinates ?? []);
+
+        return path;
+    }
+
+    private fromBuilder(builder: PolylineBuilder | CircleBuilder | CurveBuilder): SvgarPath {
+        let path = builder.build();
+
+        // Apply attributes
+
+        return path;
+    }
+
+    private fromPolyline(builder: PolylineBuilder): SvgarPath {
+        return this.fromBuilder(builder);
+    }
+
+    private fromCircle(builder: CircleBuilder): SvgarPath {
+        return this.fromBuilder(builder);
+    }
+
+    private fromCurve(builder: CurveBuilder): SvgarPath {
+        return this.fromBuilder(builder);
+    }
+
+    public withTag(tag: string): CreateSvgarPathContext {
+        this.tag = tag;
+        return this;
+    }
+
+    public withId(id: string): CreateSvgarPathContext {
+        this.id = id;
+        return this;
+    }
+
+    public withElevation(elevation: number): CreateSvgarPathContext {
+        this.elevation = elevation;
+        return this;
+    }
+
+    public withCoordinates(coordinates: number[]): CreateSvgarPathContext {
+        this.coordinates = coordinates;
+        return this;
+    }
+
+    public when(event: string, handler: () => any): CreateSvgarPathContext {
+        this.events[event] = handler;
+        return this;
     }
 
 }
