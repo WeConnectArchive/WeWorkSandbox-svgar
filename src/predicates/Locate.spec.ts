@@ -7,7 +7,7 @@ import 'mocha';
 
 describe("given a svgar cube with two slabs with two paths each", () => {
 
-    let cube = new SvgarCube();
+    let cube = new SvgarCube("cube");
 
     let slabA = new SvgarSlab("A");
     let pathA = new SvgarPath([]);

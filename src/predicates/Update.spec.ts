@@ -74,7 +74,7 @@ describe("given a default svgar path", () => {
         it("should throw an error", () => {
             expect(() => Update().svgar.path(path).coordinates.to([2, 2, 3])).to.throw("Coordinate array total must be evenly divisible by 8.");
         });
-        
+
     });
 
 });
@@ -518,7 +518,7 @@ describe("given a default svgar slab", () => {
 
 describe("given a default svgar cube", () => {
 
-    const cube = new SvgarCube();
+    const cube = new SvgarCube("cube");
 
     describe("when updating its camera by changing the extents", () => {
 
