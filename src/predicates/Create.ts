@@ -156,7 +156,8 @@ class CreateSvgarPathContext {
     public from: {
         polyline: (builder: PolylineBuilder) => SvgarPath,
         circle: (builder: CircleBuilder) => SvgarPath,
-        curve: (builder: CurveBuilder) => SvgarPath
+        curve: (builder: CurveBuilder) => SvgarPath,
+        paths: (paths: SvgarPath[]) => SvgarPath[],
     }
 
     private tag: string | undefined;
@@ -173,7 +174,8 @@ class CreateSvgarPathContext {
         this.from = {
             polyline: this.fromPolyline.bind(this),
             circle: this.fromCircle.bind(this),
-            curve: this.fromCurve.bind(this)
+            curve: this.fromCurve.bind(this),
+            paths: this.joinPaths.bind(this)
         }
     }
 
@@ -201,6 +203,10 @@ class CreateSvgarPathContext {
 
     private fromCurve(builder: CurveBuilder): SvgarPath {
         return this.fromBuilder(builder);
+    }
+
+    private joinPaths(paths: SvgarPath[]): SvgarPath[] {
+        return paths;
     }
 
     public withTag(tag: string): CreateSvgarPathContext {
