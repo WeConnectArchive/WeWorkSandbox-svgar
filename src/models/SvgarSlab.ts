@@ -268,6 +268,10 @@ export default class SvgarSlab {
         this.localStyle = style;
     }
 
+    public getLocalStyle(): SvgarStyle | undefined {
+        return this.localStyle;
+    }
+
     public getAnchor(): number[] {
         return this.anchor;
     }

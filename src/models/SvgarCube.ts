@@ -26,6 +26,8 @@ export default class SvgarCube {
         maximum: number[],
     };
 
+    private name: string;
+
     // Current svgar cache
     private cache: SvgarCubeCache = {
         root: "",
@@ -42,12 +44,14 @@ export default class SvgarCube {
         global: true,
     }
 
-    constructor() {
+    constructor(name: string) {
         this.slabs = [];
         this.scope = {
             minimum: [0, 0],
             maximum: [1, 1],
         }
+
+        this.name = name;
     }
 
     // Write out current state of svgar data as svg markup
@@ -105,6 +109,14 @@ export default class SvgarCube {
             this.cache.local,
             "</svg>"
         ].join("\n");
+    }
+
+    public getName(): string {
+        return this.name;
+    }
+
+    public setName(name: string): void {
+        this.name = name;
     }
 
     // Change current camera position based on a center point and rectangular extents

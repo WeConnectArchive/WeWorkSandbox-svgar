@@ -7,7 +7,7 @@ import 'mocha';
 
 describe("given a svgar cube with one slab", () => {
 
-    let svgar = new SvgarCube();
+    let svgar = new SvgarCube("cube");
     let slab = new SvgarSlab('test');
     let square = new PolylineBuilder(5, 5)
         .lineTo(10, 5)
