@@ -182,15 +182,21 @@ class CreateSvgarPathContext {
     private build(): SvgarPath {
         let path = new SvgarPath(this.coordinates ?? []);
 
+        if (this.tag) path.setTag(this.tag);
+        if (this.id) path.newId(this.id);
+        if (this.elevation) path.setElevation(this.elevation);
+
+        Object.keys(this.events).forEach(x => {
+            path.attach(x, this.events[x]);
+        });
+
         return path;
     }
 
     private fromBuilder(builder: PolylineBuilder | CircleBuilder | CurveBuilder): SvgarPath {
-        let path = builder.build();
+        this.coordinates = builder.build().getCoordinates();
 
-        // Apply attributes
-
-        return path;
+        return this.build();
     }
 
     private fromPolyline(builder: PolylineBuilder): SvgarPath {
