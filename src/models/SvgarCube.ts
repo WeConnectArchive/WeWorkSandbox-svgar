@@ -135,8 +135,7 @@ export default class SvgarCube {
 
     // Add a given slab to the svgar cube with a custom anchor point
     public placeAt(slab: SvgarSlab, anchorX: number, anchorY: number): void {
-        let clone = slab.clone();
-        this.slabs.push(clone);
+        this.slabs.push(slab);
         this.slabs[this.slabs.length - 1].setAnchor(anchorX, anchorY);
     }
 

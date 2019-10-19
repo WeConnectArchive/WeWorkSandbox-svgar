@@ -3,13 +3,15 @@ import Slab from './models/SvgarSlab';
 import Path from './models/SvgarPath';
 import CircleBuilder from './builders/CircleBuilder';
 import PolylineBuilder from './builders/PolylineBuilder';
+import CurveBuilder from './builders/CurveBuilder';
 
 const Builder = {
     Circle: CircleBuilder,
-    Polyline: PolylineBuilder
+    Polyline: PolylineBuilder,
+    Curve: CurveBuilder
 }
 
-// Default model and idiom exports
+// Default model and builder exports
 export default {
     Cube,
     Slab,
@@ -17,5 +19,9 @@ export default {
     Builder
 }
 
-// Individual schema model exports
-export * from './models/SvgarCube';
+// Individual predicate exports
+import Create from './predicates/Create';
+import Update from './predicates/Update';
+import Locate from './predicates/Locate';
+
+export { Create, Update, Locate }

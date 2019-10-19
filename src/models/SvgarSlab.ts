@@ -292,20 +292,6 @@ export default class SvgarSlab {
         this.geometry.push(path);
     }
 
-    public clone(): SvgarSlab {
-        let clone = new SvgarSlab(this.name);
-
-        clone.newId();
-        clone.setElevation(this.elevation);
-        clone.setCurrentState(this.state);
-        clone.setAllStates(this.states);
-        clone.setAllStyles(this.styles);
-        clone.setAnchor(this.anchor[0], this.anchor[1]);
-        clone.setAllGeometry(this.geometry);
-
-        return clone;
-    }
-
     public clipWith(slab: SvgarSlab): void {
         this.clip = slab;
     }

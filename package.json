@@ -1,6 +1,6 @@
 {
   "name": "svgar",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "svg, but a little sweeter",
   "main": "dist/index.js",
   "module": "commonjs",
@@ -19,6 +19,7 @@
     "exclude": [
       "**/*.spec.ts",
       "**/*.d.ts",
+      "index.ts",
       "dist/**",
       "coverage/**"
     ],
