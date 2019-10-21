@@ -22,7 +22,3 @@ Anything svg can do, svgar can do! But now the drawing process is a little bit s
 ## Installation
 
 `npm install svgar`
-
-## Examples
-
-Visit [svgar.dev](https://svgar.dev).
