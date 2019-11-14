@@ -1,4 +1,4 @@
-import * as uuid from 'uuid/v4';
+import { newGuid } from './../utils/Guid';
 
 interface SvgarPathCache {
     d: string,
@@ -34,7 +34,7 @@ export default class SvgarPath {
     public segments: number;
 
     constructor(coordinates: number[]) {
-        this.id = uuid.default();
+        this.id = newGuid();
         this.tag = "default";
         this.elevation = 0;
 
@@ -104,7 +104,7 @@ export default class SvgarPath {
     }
 
     public newId(id?: string): string {
-        this.id = id ?? uuid.default();
+        this.id = id ?? newGuid();
         return this.id;
     }
 

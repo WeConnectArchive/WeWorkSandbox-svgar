@@ -1,4 +1,4 @@
-import * as uuid from 'uuid/v4';
+import { newGuid } from './../utils/Guid';
 import SvgarPath from './SvgarPath';
 import SvgarState from './SvgarState';
 import SvgarStyle from './SvgarStyle';
@@ -61,7 +61,7 @@ export default class SvgarSlab {
 
     constructor(name: string) {
         this.name = name;
-        this.id = uuid.default();
+        this.id = newGuid();
         this.elevation = 0;
 
         this.state = "default";
@@ -202,7 +202,7 @@ export default class SvgarSlab {
     }
 
     public newId(id?: string): void {
-        this.id = id ?? uuid.default();
+        this.id = id ?? newGuid();
     }
 
     public getName(): string {
