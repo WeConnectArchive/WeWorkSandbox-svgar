@@ -40,6 +40,9 @@ export default class SvgarSlab {
     private anchor: number[];
     private geometry: SvgarPath[];
 
+    // Optional style toggles
+    public scaleStroke: boolean = false;
+
     // Current svgar cache
     public cache: SvgarSlabCache = {
         style: "",
@@ -125,7 +128,7 @@ export default class SvgarSlab {
 
             this.geometry.sort((a, b) => a.getElevation() - b.getElevation()).forEach(path => {
                 path.compile(this.anchor[0], this.anchor[1]);
-                paths.push(`<path vector-effect="non-scaling-stroke" id="${path.getId()}" class="${this.mapTagToStyle(path.getTag())}" ${path.cache.d} />`);
+                paths.push(`<path ${this.scaleStroke ? "" : 'vector-effect="non-scaling-stroke"'} id="${path.getId()}" class="${this.mapTagToStyle(path.getTag())}" ${path.cache.d} />`);
             });
 
             this.cache.geometry = paths.join("\n");

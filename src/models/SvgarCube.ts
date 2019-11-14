@@ -185,7 +185,7 @@ export default class SvgarCube {
     mapPageCoordinateToSvgarCoordinate(pageX: number, pageY: number, div?: Element): number[] {
         // Locate parent div with svgar coordinate or use provided element
         var nx, ny;
-        const el: Element | null = div ?? document.querySelector(`#${this.id}`);
+        const el: Element | null = div ?? document.getElementById(this.id);
 
         if (el == null) {
             return [];
