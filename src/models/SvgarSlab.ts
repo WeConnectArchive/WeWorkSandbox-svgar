@@ -167,7 +167,7 @@ export default class SvgarSlab {
         if(true) {
             let text :string[] = [];
 
-            this.text.forEach(t => {
+            this.text.sort((a, b) => a.elevation - b.elevation).forEach(t => {
                 text.push([
                     `<text `,
                     `x="${t.position.x}" `,

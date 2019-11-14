@@ -5,5 +5,6 @@ export default interface SvgarText {
     }
     textLength?: string,
     text: string,
-    tag: string
+    tag: string,
+    elevation: number,
 }
