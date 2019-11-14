@@ -2,10 +2,12 @@ import { newGuid } from './../utils/Guid';
 import SvgarPath from './SvgarPath';
 import SvgarState from './SvgarState';
 import SvgarStyle from './SvgarStyle';
+import SvgarText from './SvgarText';
 
 interface SvgarSlabCache {
     style: string,
     geometry: string,
+    text: string,
     clipPathStyle: string,
     clipPathGeometry: string,
     maskStyle: string,
@@ -36,6 +38,7 @@ export default class SvgarSlab {
 
     private clip: SvgarSlab | undefined;
     private mask: SvgarSlab | undefined;
+    private text: SvgarText[] = [];
 
     private anchor: number[];
     private geometry: SvgarPath[];
@@ -47,6 +50,7 @@ export default class SvgarSlab {
     public cache: SvgarSlabCache = {
         style: "",
         geometry: "",
+        text: "",
         clipPathStyle: "",
         clipPathGeometry: "",
         maskStyle: "",
@@ -80,7 +84,8 @@ export default class SvgarSlab {
             attributes: {
                 "fill": "none",
                 "stroke": "#000000",
-                "stroke-width": "1px"
+                "stroke-width": "1px",
+                "font": "12px sans-serif"
             }
         }]
 
@@ -156,6 +161,25 @@ export default class SvgarSlab {
         // Compile mask information, if it exists
         if(this.changed.mask) {
             this.changed.mask = false;
+        }
+
+        // Compile text information, if it exists
+        if(true) {
+            let text :string[] = [];
+
+            this.text.forEach(t => {
+                text.push([
+                    `<text `,
+                    `x="${t.position.x}" `,
+                    `y="${t.position.y}" `,
+                    t.textLength ? `textLength="${t.textLength} "` : "",
+                    `class="${this.mapTagToStyle(t.tag)}" >`,
+                    `${t.text}`,
+                    `</text>`
+                ].join(""))
+            })
+
+            this.cache.text = text.join("\n");
         }
     }
 
@@ -309,6 +333,10 @@ export default class SvgarSlab {
 
     public getMask(): SvgarSlab | undefined {
         return this.mask;
+    }
+
+    public setAllText(text: SvgarText[]): void {
+        this.text = text;
     }
 
     // Given a tag, return its style in the active state

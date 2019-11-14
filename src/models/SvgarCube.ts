@@ -89,6 +89,7 @@ export default class SvgarCube {
 
             geometry.push(slab.getClip() == undefined ? `<g id="${slab.getName()}">` : `<g id="${slab.getName()}" clip-path="url(#${slab.getClip()?.getId()})">`);
             geometry.push(slab.cache.geometry);
+            geometry.push(slab.cache.text);
             geometry.push(`</g>`)
         });
 
